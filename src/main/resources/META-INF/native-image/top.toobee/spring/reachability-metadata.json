@@ -1,0 +1,9 @@
+{
+  "reflection": [
+    {
+      "type": "top.toobee.spring.TooBeeLoggingSystem",
+      "allPublicConstructors": true,
+      "allPublicMethods": true
+    }
+  ]
+}
