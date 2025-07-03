@@ -31,6 +31,11 @@ dependencies {
 
 	//implementation("org.apache.commons:commons-lang3:3.17.0")
 	implementation("it.unimi.dsi:fastutil:8.5.15")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3")
+
+	compileOnly("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok")
 }
 
 /*

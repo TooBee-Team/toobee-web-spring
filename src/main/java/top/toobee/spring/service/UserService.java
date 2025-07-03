@@ -1,19 +1,26 @@
 package top.toobee.spring.service;
 
-import org.springframework.stereotype.Service;
-import top.toobee.spring.Repository.UserRepository;
-import top.toobee.spring.dto.User;
+import top.toobee.spring.dto.ResultInfo;
+import top.toobee.spring.dto.TBUser;
 
-import java.util.List;
+import java.util.UUID;
 
-@Service
-public class UserService {
-    private final UserRepository userRepository;
-    public UserService(UserRepository userRepository) {
-        this.userRepository=userRepository;
-    }
+public interface UserService {
+    ResultInfo register(TBUser user);
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
+    ResultInfo login(String username, String password );
+
+    ResultInfo updateQQ(TBUser user);
+
+    ResultInfo updateWechat(TBUser user);
+
+    ResultInfo updateTelegram(TBUser user);
+
+    ResultInfo updateEmail(TBUser user);
+
+    ResultInfo updatePassword(TBUser user);
+
+    ResultInfo getUserInfo(String username);
+
+    ResultInfo updateUserInfo(TBUser tbUser);
 }
