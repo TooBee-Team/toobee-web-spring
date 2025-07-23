@@ -7,9 +7,11 @@ import org.springframework.boot.logging.LoggingSystem;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
 import java.util.Scanner;
 
-@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+//@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+@SpringBootApplication
 @RestController
 
 public final class Main {
@@ -27,8 +29,11 @@ public final class Main {
 	}
 
 	@GetMapping("/")
-	public String index() {
-		return "Hello TooBee!";
+	public String index(Principal principal) {
+		if (principal == null) {
+			return "Hello TooBee!";
+		}
+		return "欢迎登录:"+principal.getName()+"!";
 	}
 
 }
