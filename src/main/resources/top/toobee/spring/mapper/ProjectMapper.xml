@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.toobee.spring.mapper.ProjectMapper">
+
+    <insert id="insert" parameterType="top.toobee.spring.dto.Project" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO project
+        (
+        identifier,
+        name,
+        <if test="type != null">type,</if>
+        <if test="creatorId != null">creator_id,</if>
+        <if test="webpageCreateTime != null">webpage_create_time,</if>
+        <if test="webpageUpdateTime != null">webpage_update_time,</if>
+        <if test="projectCreateTime != null">project_create_time,</if>
+        <if test="projectUpdateTime != null">project_update_time,</if>
+        <if test="introduction != null">introduction,</if>
+        <if test="thumbnail != null">thumbnail,</if>
+        world,
+        x,
+        y,
+        z
+        )
+        VALUES
+        (
+        #{identifier},
+        #{name},
+        <if test="type != null">#{type}::project_type,</if>
+        <if test="creatorId != null">#{creatorId},</if>
+        <if test="webpageCreateTime != null">#{webpageCreateTime},</if>
+        <if test="webpageUpdateTime != null">#{webpageUpdateTime},</if>
+        <if test="projectCreateTime != null">#{projectCreateTime},</if>
+        <if test="projectUpdateTime != null">#{projectUpdateTime},</if>
+        <if test="introduction != null">#{introduction},</if>
+        <if test="thumbnail != null">#{thumbnail},</if>
+        #{world}::world,
+        #{x},
+        #{y},
+        #{z}
+        )
+    </insert>
+    <update id="update" parameterType="top.toobee.spring.dto.Project">
+        UPDATE project
+        <set>
+            <if test="name!= null">name = #{name},</if>
+            <if test="type!= null">type = #{type}::project_type,</if>
+            <if test="projectCreateTime!= null">project_create_time = #{projectCreateTime},</if>
+            <if test="projectUpdateTime!= null">project_update_time = #{projectUpdateTime},</if>
+            <if test="introduction!= null">introduction = #{introduction},</if>
+            <if test="world!= null">world = #{world}::world,</if>
+            <if test="x!= null">x = #{x},</if>
+            <if test="y!= null">y = #{y},</if>
+            <if test="z!= null">z = #{z},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+</mapper>
