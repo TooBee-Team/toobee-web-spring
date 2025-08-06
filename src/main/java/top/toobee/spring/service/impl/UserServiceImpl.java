@@ -2,15 +2,21 @@ package top.toobee.spring.service.impl;
 
 import ch.qos.logback.core.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
+<<<<<<< HEAD
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+=======
+>>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
+<<<<<<< HEAD
 import top.toobee.spring.dto.LoginUser;
+=======
+>>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
 import top.toobee.spring.dto.ResultInfo;
 import top.toobee.spring.dto.TBUser;
 import top.toobee.spring.mapper.UserMapper;
@@ -29,7 +35,14 @@ public class UserServiceImpl implements UserDetailsService , UserService {
         if (TBUser == null) {
             throw new UsernameNotFoundException("该用户未注册");
         }
+<<<<<<< HEAD
         return new LoginUser(TBUser);
+=======
+        return User.withUsername(TBUser.getUsername())
+                .password(TBUser.getPassword())
+                .roles("USER")
+                .build();
+>>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
     }
 
     @Override
@@ -124,8 +137,13 @@ public class UserServiceImpl implements UserDetailsService , UserService {
     }
 
     @Override
+<<<<<<< HEAD
     public ResultInfo getUserInfo(int id) {
         TBUser user = userMapper.findById(id);
+=======
+    public ResultInfo getUserInfo(String username) {
+        TBUser user = userMapper.findByUsername(username);
+>>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
         if(user == null) {
             return new ResultInfo(false,"该用户不存在");
         }
@@ -135,6 +153,7 @@ public class UserServiceImpl implements UserDetailsService , UserService {
 
     @Override
     public ResultInfo updateUserInfo(TBUser tbUser) {
+<<<<<<< HEAD
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         LoginUser loginUser = (LoginUser) auth.getPrincipal();
 
@@ -147,10 +166,16 @@ public class UserServiceImpl implements UserDetailsService , UserService {
             if (!oldUsername.equals(user.getUsername())) {
                 return new ResultInfo(false,"用户名已存在");
             }
+=======
+        TBUser user = userMapper.findByUsername(tbUser.getUsername());
+        if (user==null) {
+            return new ResultInfo(false,"该用户不存在");
+>>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
         }
         userMapper.updateUserInfo(tbUser);
         return new ResultInfo(true,"更新成功");
     }
+<<<<<<< HEAD
 
     @Override
     public ResultInfo findByEmail(String email) {
@@ -196,4 +221,6 @@ public class UserServiceImpl implements UserDetailsService , UserService {
         }
         return new ResultInfo(true,"查询成功",user);
     }
+=======
+>>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
 }

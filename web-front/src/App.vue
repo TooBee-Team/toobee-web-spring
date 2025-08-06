@@ -14,7 +14,11 @@ import router from './router';
   </div>
   <HelloWorld msg="Vite + Vue" /> -->
   <nav>
+<<<<<<< HEAD
     <router-link to="/" >首页</router-link>
+=======
+    <router-link to="/">首页</router-link>
+>>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
   </nav>
   <router-view />
 </template>

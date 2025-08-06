@@ -13,10 +13,13 @@ export default defineConfig({
       '/login': {
         target: 'http://localhost:8080',
         changeOrigin: true,
+<<<<<<< HEAD
       },
       '/project': {
         target: 'http://localhost:8080',
         changeOrigin: true,
+=======
+>>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
       }
     }
   }

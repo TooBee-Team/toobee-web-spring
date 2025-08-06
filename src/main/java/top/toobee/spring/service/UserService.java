@@ -20,6 +20,7 @@ public interface UserService {
 
     ResultInfo updatePassword(TBUser user);
 
+<<<<<<< HEAD
     ResultInfo getUserInfo(int id);
 
     ResultInfo updateUserInfo(TBUser tbUser);
@@ -33,4 +34,9 @@ public interface UserService {
     ResultInfo findByWechat(String wechat);
 
     ResultInfo findByTelegram(String telegram);
+=======
+    ResultInfo getUserInfo(String username);
+
+    ResultInfo updateUserInfo(TBUser tbUser);
+>>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
 }
