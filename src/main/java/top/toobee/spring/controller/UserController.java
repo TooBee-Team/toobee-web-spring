@@ -3,15 +3,10 @@ package top.toobee.spring.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-<<<<<<< HEAD
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import top.toobee.spring.dto.LoginUser;
-=======
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.*;
->>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
 import top.toobee.spring.dto.ResultInfo;
 import top.toobee.spring.dto.TBUser;
 import top.toobee.spring.service.UserService;
@@ -27,10 +22,6 @@ public class UserController {
     public ResultInfo register(@RequestBody TBUser user) {
         ResultInfo resultInfo = userService.register(user);
         if(resultInfo.isSuccess()) {
-<<<<<<< HEAD
-=======
-            userService.register(user);
->>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
             return ResultInfo.builder()
                     .success(true)
                     .data(user.getUsername())
@@ -147,14 +138,9 @@ public class UserController {
     }
 
     @GetMapping("/getUserInfo")
-<<<<<<< HEAD
     public ResultInfo getUserInfo(Authentication authentication) {
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         ResultInfo resultInfo = userService.getUserInfo(loginUser.getUser().getId());
-=======
-    public ResultInfo getUserInfo(Principal principal) {
-        ResultInfo resultInfo = userService.getUserInfo(principal.getName());
->>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
         if (resultInfo.isSuccess()) {
             return ResultInfo.builder()
                     .success(true)
@@ -184,7 +170,6 @@ public class UserController {
                 .data(resultInfo.getData())
                 .message(resultInfo.getMessage())
                 .build();
-<<<<<<< HEAD
     }
 
     @GetMapping("/findByQq")
@@ -253,7 +238,5 @@ public class UserController {
                 .data(resultInfo.getData())
                 .message(resultInfo.getMessage())
                 .build();
-=======
->>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
     }
 }

@@ -15,22 +15,14 @@ public class TBUser implements Serializable {
     private UUID uuid;
     private String username; //用户名
     private String email;
-<<<<<<< HEAD
     private String qq;
-=======
-    private Long qq;
->>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
     private String password;
     private String wechat;
     private String telegram;
     public TBUser() {
     }
 
-<<<<<<< HEAD
     public TBUser(int id, UUID uuid, String username, String email, String qq, String password, String wechat, String telegram) {
-=======
-    public TBUser(int id, UUID uuid, String username, String email, Long qq, String password, String wechat, String telegram) {
->>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
         this.id = id;
         this.uuid = uuid;
         this.username = username;
@@ -57,19 +49,11 @@ public class TBUser implements Serializable {
         this.username = username;
     }
 
-<<<<<<< HEAD
     public String getQq() {
         return qq;
     }
 
     public void setQq(String qq) {
-=======
-    public Long getQq() {
-        return qq;
-    }
-
-    public void setQq(Long qq) {
->>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
         this.qq = qq;
     }
 

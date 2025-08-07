@@ -20,11 +20,7 @@ public interface UserMapper {
     void updatePassword(String username, String password);
 
     @Update("update users set qq = #{qq} where username = #{username}")
-<<<<<<< HEAD
     void updateQQ(String username, String qq);
-=======
-    void updateQQ(String username, Long qq);
->>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
 
     @Update("update users set wechat = #{wechat} where username = #{username}")
     void updateWechat(String username, String wechat);
@@ -35,7 +31,6 @@ public interface UserMapper {
     @Update("update users set email = #{email} where username = #{username}")
     void updateEmail(String username, String email);
 
-<<<<<<< HEAD
     @Select("select * from users where telegram = #{telegram}")
     TBUser findByTelegram(String telegram);
 
@@ -51,6 +46,4 @@ public interface UserMapper {
     @Select("select * from users where id = #{id}")
     TBUser findById(int id);
 
-=======
->>>>>>> 12c385e32a27627a2527439f29ef196b8dd842f5
 }
