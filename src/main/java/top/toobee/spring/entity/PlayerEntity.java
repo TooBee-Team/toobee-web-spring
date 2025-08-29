@@ -1,0 +1,31 @@
+package top.toobee.spring.entity;
+
+import jakarta.persistence.*;
+import top.toobee.spring.domain.model.Role;
+
+import java.util.UUID;
+
+@Entity
+@Table(schema = "public", name = "player")
+public class PlayerEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Integer id;
+
+    @Column(unique = true, updatable = false,nullable = false)
+    public UUID uuid;
+
+    @Column(unique = true, nullable = false)
+    public String name;
+
+    @Column(nullable = false)
+    public Boolean white;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    public Role playerRole;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    public UserEntity user;
+}

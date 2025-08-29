@@ -28,16 +28,22 @@ public class UserEntity {
     @Column(name = "last_login_time")
     public LocalDateTime lastLoginTime;
 
+    @Column
     public String email;
 
+    @Column
     public String qq;
 
+    @Column
     public String wechat;
 
+    @Column
     public String telegram;
 
+    @Column
     public String nickname;
 
+    @Column
     public String introduction;
 
     public UserEntity(@Nonnull String name, @Nonnull String password) {
