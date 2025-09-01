@@ -1,10 +1,15 @@
 package top.toobee.spring.domain.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.JoinColumn;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Group implements Serializable {
+    @Column(name = "project_id")
     public Integer projectId;
+    @Column(name = "player_id")
     public Integer playerId;
 
     @Override
@@ -20,4 +25,6 @@ public class Group implements Serializable {
         return Objects.hash(projectId, playerId);
     }
 
+    public Group() {
+    }
 }

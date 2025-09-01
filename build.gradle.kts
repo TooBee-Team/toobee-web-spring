@@ -49,3 +49,6 @@ tasks.named<BootRun>("bootRun") {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+tasks.processResources {
+	exclude("**/custom.yml")   // 把服务器专用的配置文件排除，避免打包到镜像中
+}
