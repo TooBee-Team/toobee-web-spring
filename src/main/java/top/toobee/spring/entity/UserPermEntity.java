@@ -12,13 +12,13 @@ public class UserPermEntity {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    public Integer userId;
+    public UserEntity user;
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "perm_id")
-    public Integer permId;
+    public UserPermEntity perm;
 
     @Column(name = "created_time", nullable = false, updatable = false)
-    public LocalDateTime createTime;
+    public LocalDateTime createdTime;
 }

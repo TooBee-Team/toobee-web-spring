@@ -1,7 +1,6 @@
 package top.toobee.spring.entity;
 
 import jakarta.persistence.*;
-import top.toobee.spring.domain.model.Role;
 
 import java.util.UUID;
 
@@ -12,10 +11,10 @@ public class PlayerEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
-    @Column(unique = true, updatable = false,nullable = false)
+    @Column(unique = true, updatable = false, nullable = false)
     public UUID uuid;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, updatable = false, nullable = false)
     public String name;
 
     @Column(nullable = false)
@@ -23,7 +22,7 @@ public class PlayerEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
-    public Role playerRole;
+    public PlayerRoleEntity playerRole;
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

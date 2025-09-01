@@ -3,7 +3,6 @@ package top.toobee.spring.entity;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -22,34 +21,9 @@ public class UserEntity {
     @Column(nullable = false)
     public String password;
 
-    @Column(name = "created_time", nullable = false, updatable = false)
-    public LocalDateTime createdTime;
-
-    @Column(name = "last_login_time")
-    public LocalDateTime lastLoginTime;
-
-    @Column
-    public String email;
-
-    @Column
-    public String qq;
-
-    @Column
-    public String wechat;
-
-    @Column
-    public String telegram;
-
-    @Column
-    public String nickname;
-
-    @Column
-    public String introduction;
-
     public UserEntity(@Nonnull String name, @Nonnull String password) {
         this.name = name;
         this.password = password;
         this.uuid = UUID.randomUUID();
-        this.createdTime = LocalDateTime.now();
     }
 }

@@ -1,10 +1,12 @@
-package top.toobee.spring.entity;
+package top.toobee.spring.entity.game_project;
 
 import jakarta.persistence.*;
+import top.toobee.spring.entity.UserEntity;
 
 import java.time.LocalDateTime;
 
 @Entity
+@Table(schema = "game_project", name = "like")
 public class LikeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

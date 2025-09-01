@@ -7,27 +7,31 @@ CREATE TYPE public.world AS ENUM ('overworld', 'the_nether', 'the_end');
 
 CREATE TABLE public.users (
     id              serial PRIMARY KEY,
-    uuid            uuid NOT NULL UNIQUE, -- unupdatable
+    uuid            uuid NOT NULL UNIQUE, -- non-updatable
     name            varchar(20) NOT NULL UNIQUE,
-    password        varchar(512) NOT NULL,
-    created_time    timestamp NOT NULL DEFAULT now(),
-    last_login_time timestamp NOT NULL DEFAULT now(),
+    password        varchar(512) NOT NULL
+); COMMENT ON TABLE public.users IS '网站用户核心信息';
+
+CREATE TABLE public.user_profile (
+    user_id         integer PRIMARY KEY REFERENCES public.users,
+    created_time    timestamp NOT NULL DEFAULT now(), -- non-updatable
+    last_login_time timestamp,
     email           varchar(127),
     qq              varchar(12),
     wechat          varchar(64),
     telegram        varchar(64),
     nickname        varchar(30),
     introduction    text
-); COMMENT ON TABLE public.users IS '网站用户核心信息';
-COMMENT ON COLUMN users.created_time IS '用户创建时间';
-COMMENT ON COLUMN users.last_login_time IS '用户上一次登录时间';
-COMMENT ON COLUMN users.nickname IS '昵称';
-COMMENT ON COLUMN users.introduction IS '自我介绍';
-CREATE INDEX user_qq_index ON users (qq);
+); COMMENT ON TABLE public.user_profile IS '网站用户资料';
+COMMENT ON COLUMN user_profile.created_time IS '用户创建时间';
+COMMENT ON COLUMN user_profile.last_login_time IS '用户上一次登录时间';
+COMMENT ON COLUMN user_profile.nickname IS '昵称';
+COMMENT ON COLUMN user_profile.introduction IS '自我介绍';
+CREATE INDEX user_qq_index ON public.user_profile (qq);
 
 CREATE TABLE public.permission (
     id          serial PRIMARY KEY,
-    name        varchar(64),
+    name        varchar(64) NOT NULL UNIQUE,
     description text
 ); COMMENT ON TABLE public.permission IS '网站权限';
 
@@ -40,7 +44,7 @@ CREATE TABLE public.user_perm (
 
 CREATE TABLE public.player_role (
     id          serial PRIMARY KEY,
-    name        varchar(64),
+    name        varchar(64) NOT NULL UNIQUE,
     description text
 ); COMMENT ON TABLE public.player_role IS '玩家在游戏中的角色';
 
@@ -66,7 +70,7 @@ CREATE TABLE game_project.item (
     name                    varchar(100) NOT NULL,
     type_id                 integer REFERENCES game_project.type,
     creator_id              integer NOT NULL REFERENCES users,
-    webpage_created_time    timestamp NOT NULL DEFAULT now(),
+    webpage_created_time    timestamp NOT NULL DEFAULT now(), -- non-updatable
     webpage_updated_time    timestamp NOT NULL DEFAULT now(),
     project_created_time    date,
     project_updated_time    date,
