@@ -1,11 +1,12 @@
 package top.toobee.spring.domain.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
 
 import java.io.Serializable;
 import java.util.Objects;
-
+@Embeddable
 public class Group implements Serializable {
     @Column(name = "project_id")
     public Integer projectId;

@@ -1,10 +1,11 @@
 package top.toobee.spring.domain.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
 import java.util.Objects;
-
+@Embeddable
 public class UserPerm implements Serializable {
     @Column(name = "user_id")
     public Integer userId;

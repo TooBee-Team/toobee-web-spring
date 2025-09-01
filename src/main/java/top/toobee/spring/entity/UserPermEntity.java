@@ -6,18 +6,20 @@ import top.toobee.spring.domain.model.UserPerm;
 import java.time.LocalDateTime;
 
 @Entity
-@IdClass(UserPerm.class)
 @Table(schema = "public", name = "user_perm")
 public class UserPermEntity {
-    @Id
+    @EmbeddedId
+    public UserPerm id;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @MapsId("userId")
+    @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
     public UserEntity user;
 
-    @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "perm_id")
-    public UserPermEntity perm;
+    @MapsId("permId")
+    @JoinColumn(name = "perm_id", nullable = false, insertable = false, updatable = false)
+    public PermissionEntity perm;
 
     @Column(name = "created_time", nullable = false, updatable = false)
     public LocalDateTime createdTime;

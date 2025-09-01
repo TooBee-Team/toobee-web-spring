@@ -13,11 +13,11 @@ public class LikeEntity {
     public Integer id;
 
     @JoinColumn(name = "user_id", nullable = false)
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     public UserEntity user;
 
     @JoinColumn(name = "project_id", nullable = false)
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     public ItemEntity project;
 
     @Column(name = "created_time", nullable = false)

@@ -24,7 +24,7 @@ public class PlayerEntity {
     @JoinColumn(name = "role_id")
     public PlayerRoleEntity playerRole;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     public UserEntity user;
 }

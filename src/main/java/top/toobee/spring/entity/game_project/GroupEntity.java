@@ -8,18 +8,20 @@ import top.toobee.spring.domain.model.Group;
 import top.toobee.spring.entity.PlayerEntity;
 
 @Entity
-@IdClass(Group.class)
 @Table(schema = "game_project", name = "group")
 public class GroupEntity {
-    @Id
-    @JoinColumn(name = "project_id")
-    @ManyToMany(fetch = FetchType.LAZY)
-    public ItemEntity projectId;
+    @EmbeddedId
+    public Group id;
 
-    @Id
-    @JoinColumn(name = "player_id")
-    @ManyToMany(fetch = FetchType.LAZY)
-    public PlayerEntity playerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("projectId")
+    @JoinColumn(name = "project_id", nullable = false, insertable = false, updatable = false)
+    public ItemEntity project;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("playerId")
+    @JoinColumn(name = "player_id", nullable = false, insertable = false, updatable = false)
+    public PlayerEntity player;
 
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType.class)

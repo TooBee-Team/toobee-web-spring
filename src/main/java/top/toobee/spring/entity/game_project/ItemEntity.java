@@ -22,9 +22,11 @@ public class ItemEntity {
     @Column(nullable = false)
     public String name;
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id")
     public TypeEntity type;
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "creator_id")
     public UserEntity creator;
 
