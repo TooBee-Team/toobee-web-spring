@@ -15,4 +15,6 @@ public abstract class Role {
     @Column
     public String description;
 
+    public Role() {
+    }
 }

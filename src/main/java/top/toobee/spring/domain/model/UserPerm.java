@@ -1,10 +1,14 @@
 package top.toobee.spring.domain.model;
 
+import jakarta.persistence.Column;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 public class UserPerm implements Serializable {
+    @Column(name = "user_id")
     public Integer userId;
+    @Column(name = "perm_id")
     public Integer permId;
 
     @Override
@@ -18,5 +22,8 @@ public class UserPerm implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(userId, permId);
+    }
+
+    public UserPerm() {
     }
 }
