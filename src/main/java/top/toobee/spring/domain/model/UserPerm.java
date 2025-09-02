@@ -5,12 +5,10 @@ import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
 import java.util.Objects;
-
 @Embeddable
 public class UserPerm implements Serializable {
     @Column(name = "user_id")
     public Integer userId;
-
     @Column(name = "perm_id")
     public Integer permId;
 
@@ -27,5 +25,12 @@ public class UserPerm implements Serializable {
         return Objects.hash(userId, permId);
     }
 
-    public UserPerm() {}
+    public UserPerm() {
+    }
+
+    public UserPerm(Integer userId, Integer permId) {
+        this.userId = userId;
+        this.permId = permId;
+    }
+
 }

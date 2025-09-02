@@ -1,8 +1,8 @@
 package top.toobee.spring.service;
 
+import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import top.toobee.spring.entity.UserEntity;
 import top.toobee.spring.repository.UserRepository;

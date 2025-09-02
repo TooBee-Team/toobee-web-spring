@@ -1,6 +1,7 @@
 package top.toobee.spring.entity.game_project;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 import top.toobee.spring.domain.enums.World;
@@ -30,6 +31,7 @@ public class ItemEntity {
     @JoinColumn(nullable = false, name = "creator_id")
     public UserEntity creator;
 
+    @CreationTimestamp
     @Column(name = "webpage_created_time", nullable = false, updatable = false)
     public LocalDateTime webpageCreatedTime;
 

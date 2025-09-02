@@ -30,4 +30,6 @@ public class UserEntity {
     // 否则会报错：org.hibernate.TransientObjectException: object references an unsaved transient instance - save the transient instance before flushing
     public UserEntity() {
     }
+
+
 }
