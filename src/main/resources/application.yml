@@ -14,3 +14,26 @@ spring:
     open-in-view: true
   config:
     import: "optional:file:./custom.yml"
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: production
+  web:
+    resources:
+      static-locations: []
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  web:
+    resources:
+      static-locations:
+        - classpath:/static-dev/
+  mvc:
+    static-path-pattern: "/**"

@@ -21,11 +21,11 @@ repositories {
 }
 
 dependencies {
-	setOf("web", "security", "jdbc", "websocket", "data-jpa").forEach {
+	setOf("web", "security", "jdbc", "websocket", "data-jpa", "amqp").forEach {
 		implementation("org.springframework.boot:spring-boot-starter-$it")
 	}
 	//implementation("org.apache.commons:commons-lang3:3.17.0")
-	implementation("it.unimi.dsi:fastutil:8.5.15")
+	implementation("it.unimi.dsi:fastutil:8.5.16")
 	runtimeOnly("org.postgresql:postgresql")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -44,11 +44,12 @@ graalvmNative {
 tasks.named<BootRun>("bootRun") {
 	//workingDir = file("run").apply(File::mkdirs)
 	standardInput = System.`in`
+    systemProperties["spring.profiles.active"] = "dev"
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
 tasks.processResources {
-	exclude("**/custom.yml")   // 把服务器专用的配置文件排除，避免打包到镜像中
+	exclude("**/custom.yml", "**/static-dev/**")
 }

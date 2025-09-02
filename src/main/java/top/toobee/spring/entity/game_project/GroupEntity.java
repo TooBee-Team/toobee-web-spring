@@ -25,6 +25,6 @@ public class GroupEntity {
 
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType.class)
-    @Column
+    @Column(nullable = false)
     public UserRole role;
 }
