@@ -44,11 +44,12 @@ graalvmNative {
 tasks.named<BootRun>("bootRun") {
 	//workingDir = file("run").apply(File::mkdirs)
 	standardInput = System.`in`
+    systemProperty("spring.profiles.active", "dev")
 }
 
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
 tasks.processResources {
-	exclude("**/custom.yml")   // 把服务器专用的配置文件排除，避免打包到镜像中
+	exclude("**/custom.yml", "**/static-dev/**")
 }

@@ -28,8 +28,5 @@ public class UserEntity {
     }
     //开启级联操作，Hibernate 需要一个无参构造函数
     // 否则会报错：org.hibernate.TransientObjectException: object references an unsaved transient instance - save the transient instance before flushing
-    public UserEntity() {
-    }
-
-
+    public UserEntity() {}
 }

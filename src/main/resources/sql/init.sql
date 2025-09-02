@@ -1,7 +1,7 @@
 CREATE SCHEMA game_project;
 
 -- 项目贡献等级：所有者（核心发起人）、主要贡献者、参与贡献者
-CREATE TYPE game_project.user_role AS ENUM ('OWNER', 'CONTRIBUTER', 'PARTICIPANT');
+CREATE TYPE game_project.user_role AS ENUM ('OWNER', 'CONTRIBUTOR', 'PARTICIPANT');
 -- 维度：主世界、下界、末地
 CREATE TYPE public.world AS ENUM ('OVERWORLD', 'THE_NETHER', 'THE_END');
 
@@ -23,10 +23,10 @@ CREATE TABLE public.user_profile (
     nickname        varchar(30),
     introduction    text
 ); COMMENT ON TABLE public.user_profile IS '网站用户资料';
-COMMENT ON COLUMN user_profile.created_time IS '用户创建时间';
-COMMENT ON COLUMN user_profile.last_login_time IS '用户上一次登录时间';
-COMMENT ON COLUMN user_profile.nickname IS '昵称';
-COMMENT ON COLUMN user_profile.introduction IS '自我介绍';
+COMMENT ON COLUMN public.user_profile.created_time IS '用户创建时间';
+COMMENT ON COLUMN public.user_profile.last_login_time IS '用户上一次登录时间';
+COMMENT ON COLUMN public.user_profile.nickname IS '昵称';
+COMMENT ON COLUMN public.user_profile.introduction IS '自我介绍';
 CREATE INDEX user_qq_index ON public.user_profile (qq);
 
 CREATE TABLE public.permission (
@@ -55,8 +55,8 @@ CREATE TABLE public.player (
     white   boolean NOT NULL DEFAULT false,
     role_id integer REFERENCES player_role,
     user_id integer REFERENCES users
-); COMMENT ON TABLE player IS '游戏中的玩家信息';
-COMMENT ON COLUMN player.white IS '是否为白名单';
+); COMMENT ON TABLE public.player IS '游戏中的玩家信息';
+COMMENT ON COLUMN public.player.white IS '是否为白名单';
 
 CREATE TABLE game_project.type (
     id          serial PRIMARY KEY,

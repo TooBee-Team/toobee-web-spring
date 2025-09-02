@@ -12,6 +12,7 @@ import java.util.Objects;
 public class Group implements Serializable {
     @Column(name = "project_id")
     public Integer projectId;
+
     @Column(name = "player_id")
     public Integer playerId;
 
@@ -28,8 +29,7 @@ public class Group implements Serializable {
         return Objects.hash(projectId, playerId);
     }
 
-    public Group() {
-    }
+    public Group() {}
 
     public Group(Integer projectId, Integer playerId) {
         this.projectId = projectId;
