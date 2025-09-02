@@ -1,9 +1,9 @@
 CREATE SCHEMA game_project;
 
 -- 项目贡献等级：所有者（核心发起人）、主要贡献者、参与贡献者
-CREATE TYPE game_project.user_role AS ENUM ('owner', 'contributor', 'participant');
+CREATE TYPE game_project.user_role AS ENUM ('OWNER', 'CONTRIBUTER', 'PARTICIPANT');
 -- 维度：主世界、下界、末地
-CREATE TYPE public.world AS ENUM ('overworld', 'the_nether', 'the_end');
+CREATE TYPE public.world AS ENUM ('OVERWORLD', 'THE_NETHER', 'THE_END');
 
 CREATE TABLE public.users (
     id              serial PRIMARY KEY,

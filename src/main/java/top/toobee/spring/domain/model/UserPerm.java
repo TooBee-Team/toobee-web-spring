@@ -27,4 +27,10 @@ public class UserPerm implements Serializable {
 
     public UserPerm() {
     }
+
+    public UserPerm(Integer userId, Integer permId) {
+        this.userId = userId;
+        this.permId = permId;
+    }
+
 }

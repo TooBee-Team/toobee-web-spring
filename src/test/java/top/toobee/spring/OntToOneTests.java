@@ -1,5 +1,6 @@
 package top.toobee.spring;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.Table;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ public class OntToOneTests {
     @Test
     //@Transactional
     public void testC() {
-        String name = generateRandomString(6);
+        String name = RandomString.generateRandomString(6);
         UserEntity user = new UserEntity(name, "123456");
         // 记录日志信息
 
@@ -39,19 +40,7 @@ public class OntToOneTests {
         userRepository.save(user);
     }
 
-    public static String generateRandomString(int length) {
-        StringBuilder sb = new StringBuilder(length);
-        SecureRandom rnd = new SecureRandom();
 
-        while (sb.length() < length) {
-            // Generate a random number between 0 (inclusive) and 36 (exclusive)
-            int randomChar = rnd.nextInt(36);
-            // Convert the number to a character
-            char c = (char) (randomChar < 26 ? 'a' + randomChar : '0' + randomChar - 26);
-            sb.append(c);
-        }
-        return sb.toString();
-    }
 
 }
 

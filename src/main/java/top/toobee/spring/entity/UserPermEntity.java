@@ -1,6 +1,7 @@
 package top.toobee.spring.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 import top.toobee.spring.domain.model.UserPerm;
 
 import java.time.LocalDateTime;
@@ -22,5 +23,15 @@ public class UserPermEntity {
     public PermissionEntity perm;
 
     @Column(name = "created_time", nullable = false, updatable = false)
+    @CreationTimestamp
     public LocalDateTime createdTime;
+
+    public UserPermEntity() {
+    }
+
+    public UserPermEntity(UserEntity user, PermissionEntity perm) {
+        this.id = new UserPerm(user.id, perm.id);
+        this.user = user;
+        this.perm = perm;
+    }
 }

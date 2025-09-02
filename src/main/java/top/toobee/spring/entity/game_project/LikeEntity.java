@@ -1,6 +1,7 @@
 package top.toobee.spring.entity.game_project;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 import top.toobee.spring.entity.UserEntity;
 
 import java.time.LocalDateTime;
@@ -21,5 +22,6 @@ public class LikeEntity {
     public ItemEntity project;
 
     @Column(name = "created_time", nullable = false)
+    @CreationTimestamp
     public LocalDateTime createdTime;
 }

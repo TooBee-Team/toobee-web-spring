@@ -3,6 +3,8 @@ package top.toobee.spring.domain.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
+import top.toobee.spring.entity.PlayerEntity;
+import top.toobee.spring.entity.game_project.ItemEntity;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -27,5 +29,10 @@ public class Group implements Serializable {
     }
 
     public Group() {
+    }
+
+    public Group(Integer projectId, Integer playerId) {
+        this.projectId = projectId;
+        this.playerId = playerId;
     }
 }
