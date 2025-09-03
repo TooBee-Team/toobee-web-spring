@@ -53,6 +53,7 @@ CREATE TABLE public.player (
     uuid    uuid NOT NULL UNIQUE,
     name    varchar(20) NOT NULL UNIQUE,
     white   boolean NOT NULL DEFAULT false,
+    fake    boolean NOT NULL DEFAULT false,
     role_id integer REFERENCES player_role,
     user_id integer REFERENCES users
 ); COMMENT ON TABLE public.player IS '游戏中的玩家信息';

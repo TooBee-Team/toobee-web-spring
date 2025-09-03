@@ -1,6 +1,7 @@
 package top.toobee.spring.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.UUID;
 
@@ -19,6 +20,9 @@ public class PlayerEntity {
 
     @Column(nullable = false)
     public Boolean white = false;
+
+    @Column(nullable = false)
+    public Boolean fake = false;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")

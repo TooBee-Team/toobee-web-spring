@@ -26,7 +26,8 @@ public class UserPermEntity {
     @CreationTimestamp
     public LocalDateTime createdTime;
 
-    public UserPermEntity() {}
+    public UserPermEntity() {
+    }
 
     public UserPermEntity(UserEntity user, PermissionEntity perm) {
         this.id = new UserPerm(user.id, perm.id);

@@ -25,10 +25,11 @@ public class GroupEntity {
 
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType.class)
-    @Column(nullable = false)
+    @Column
     public UserRole role;
 
-    public GroupEntity() {}
+    public GroupEntity() {
+    }
 
     public GroupEntity(ItemEntity project, PlayerEntity player) {
         this.id = new Group(project.id, player.id);

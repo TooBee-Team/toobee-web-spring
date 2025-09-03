@@ -35,4 +35,9 @@ public class Group implements Serializable {
         this.projectId = projectId;
         this.playerId = playerId;
     }
+
+    public Group(Integer projectId, Integer playerId) {
+        this.projectId = projectId;
+        this.playerId = playerId;
+    }
 }
