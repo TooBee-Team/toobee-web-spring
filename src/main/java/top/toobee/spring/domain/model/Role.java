@@ -2,7 +2,6 @@ package top.toobee.spring.domain.model;
 
 import jakarta.persistence.*;
 
-
 @MappedSuperclass
 public abstract class Role {
     @Id
