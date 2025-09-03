@@ -21,6 +21,9 @@ public class PlayerEntity {
     @Column(nullable = false)
     public Boolean white = false;
 
+    @Column(nullable = false)
+    public Boolean fake = false;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     public PlayerRoleEntity playerRole;
