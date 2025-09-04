@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import top.toobee.spring.entity.UserEntity;
 import top.toobee.spring.service.UserService;
 
+import java.security.Principal;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -33,4 +36,12 @@ public class UserController {
     public @NonNull UserEntity create() {
         return userService.createRandom();
     }
+
+    @PostMapping("login")
+    public @Nullable Map<String, String> login(@RequestParam("name") String name, @RequestParam("password") String password) {
+        if (name.isBlank() || password.isEmpty())
+            throw new IllegalArgumentException("name or password is empty");
+        return userService.login(name, password);
+    }
 }
+

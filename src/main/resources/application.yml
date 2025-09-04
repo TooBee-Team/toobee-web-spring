@@ -1,3 +1,7 @@
+jwt:
+  secret: k3b1o9z8x1v6u5t4s1r2q1p0o9n8m7l6j5h4g3f2e1d0c9b8a7z6y5x4w3v2u1t0s9r8q4p6o5n1m3l2k1j0h7g8f7e4d5c4b3a2z1y0x9w8v7u6t5s4r3q2p1o0n9m8l7k6j5h4g3f2e1d0c9b8a7
+  expiration: 86400000
+
 spring:
   application:
     name:
@@ -36,3 +40,6 @@ spring:
       static-locations: classpath:/static-dev/
   mvc:
     static-path-pattern: "/**"
+
+
+
