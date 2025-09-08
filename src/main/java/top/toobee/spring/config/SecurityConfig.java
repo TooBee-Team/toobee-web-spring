@@ -1,9 +1,11 @@
 package top.toobee.spring.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,6 +23,7 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final UserService userService;
 
+    @Autowired
     public SecurityConfig(JwtAuthFilter jwtAuthFilter, UserService userService) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.userService = userService;
@@ -29,15 +32,19 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(req -> req.requestMatchers("/user/**", "/h2-console/**").permitAll()
-                        .anyRequest().authenticated()).exceptionHandling(ex -> ex.authenticationEntryPoint(new JwtAuthEntryPoint())
-                        .accessDeniedHandler(new JwtAccessDeniedHandler())).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers("/api/private/**").authenticated()
+                        .anyRequest().permitAll())
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(new JwtAuthEntryPoint())
+                        .accessDeniedHandler(new JwtAccessDeniedHandler()))
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .userDetailsService(userService)
                 .build();
     }
+
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
