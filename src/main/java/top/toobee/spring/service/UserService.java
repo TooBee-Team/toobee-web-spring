@@ -2,6 +2,7 @@ package top.toobee.spring.service;
 
 import jakarta.annotation.Nullable;
 import org.apache.catalina.User;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -19,6 +20,7 @@ import top.toobee.spring.utils.JwtUtil;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -30,6 +32,9 @@ public class UserService implements UserDetailsService {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
     }
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     public @Nullable UserEntity findById(Integer id) {
         return userRepository.findById(id).orElse(null);
@@ -61,6 +66,13 @@ public class UserService implements UserDetailsService {
     }
 
     public @NonNull Map<String,String> login(@NonNull String name, @NonNull String password) {
+        Optional<UserEntity> user = userRepository.findByName(name);
+        if (user.isEmpty()) {
+            String queuqeName = "toobee";
+            String userInfo = name+";"+password;
+            rabbitTemplate.convertAndSend(queuqeName, userInfo);
+            return  Map.of("error","用户不存在");
+        }
         Authentication auth = new UsernamePasswordAuthenticationToken(name,password);
         String token = jwtUtil.generateToken((String) auth.getPrincipal(),auth.getAuthorities());
             return Map.of("token",token);
