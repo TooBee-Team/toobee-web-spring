@@ -3,6 +3,7 @@ package top.toobee.spring.entity;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -20,6 +21,9 @@ public class UserEntity {
 
     @Column(nullable = false)
     public String password;
+
+    @OneToMany(mappedBy = "name", cascade = CascadeType.ALL, orphanRemoval = true) //mappedBy 关联的是 PermissionEntity 中的 name 属性
+    public Set<PermissionEntity> permissions;
 
     public UserEntity(@Nonnull String name, @Nonnull String password) {
         this.name = name;

@@ -1,6 +1,9 @@
 package top.toobee.spring.service;
 
 import jakarta.annotation.Nullable;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Transient;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
@@ -11,12 +14,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import top.toobee.spring.entity.ProfileEntity;
 import top.toobee.spring.entity.UserEntity;
 import top.toobee.spring.repository.UserRepository;
 import top.toobee.spring.utils.JwtUtil;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -27,6 +33,9 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final RabbitTemplate rabbitTemplate;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Autowired
     public UserService(UserRepository userRepository, JwtUtil jwtUtil, RabbitTemplate rabbitTemplate) {
@@ -39,6 +48,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public @NonNull UserEntity register(@NonNull String name, @NonNull String password) {
         if (userRepository.findByName(name).isPresent()) {
             throw new IllegalArgumentException("用户名已存在");
@@ -47,7 +57,10 @@ public class UserService implements UserDetailsService {
             throw new IllegalArgumentException("用户名格式错误");
         }
         final var userEntity = new UserEntity(name, password);
-        userRepository.saveAndFlush(userEntity);
+        ProfileEntity profile = new ProfileEntity();
+        profile.user = userEntity;
+        entityManager.persist(profile);
+        entityManager.persist(userEntity);
         return userEntity;
     }
 
@@ -61,16 +74,44 @@ public class UserService implements UserDetailsService {
         return new User(user.name,user.password,new ArrayList<>());
     }
 
+    @Transactional
     public @NonNull Map<String,String> login(@NonNull String name, @NonNull String password) {
         Optional<UserEntity> user = userRepository.findByName(name);
         if (user.isEmpty()) {
             String queueName = "toobee";
             String userInfo = name + ";" + password;
-            rabbitTemplate.convertAndSend(queueName, userInfo);
-            return Map.of("error", "用户不存在");
+            String str = "";
+            Object o = rabbitTemplate.convertSendAndReceive(queueName, userInfo);
+            if (o instanceof byte[]) {
+                 str = new String((byte[]) o);
+            }else if (o!=null){
+                str = o.toString();
+            }
+            if (o == null || str.equals("NOT_REGISTERED")) {
+                return Map.of("error", "用户不存在");
+            }else if (str.equals("WRONG")) {
+                return Map.of("error", "密码错误");
+            }
+            //把用户信息保存到数据库
+            register(name,password);
+            //重新查询获取用户信息
+            user = userRepository.findByName(name);
+        }
+        else {
+            if (!user.get().password.equals(password)) {
+                return Map.of("error", "密码错误");
+            }
         }
         Authentication auth = new UsernamePasswordAuthenticationToken(name, password);
         String token = jwtUtil.generateToken((String) auth.getPrincipal(), auth.getAuthorities());
-            return Map.of("token", token);
+        //更新登录时间
+        try {
+            userRepository.updateLoginTime(user.get().id);
+        }catch (NoSuchElementException e){
+            e.printStackTrace();
+            return Map.of("error", "更新登录时间失败,用户不存在!");
+        }
+        return Map.of("token", token);
     }
+
 }
