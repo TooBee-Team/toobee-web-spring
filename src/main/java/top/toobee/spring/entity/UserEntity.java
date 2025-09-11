@@ -4,9 +4,14 @@ import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Generated;
 import org.hibernate.generator.EventType;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(schema = "public", name = "users")
@@ -32,7 +37,17 @@ public class UserEntity {
         this.name = name;
         this.password = password;
     }
-    //开启级联操作，Hibernate 需要一个无参构造函数
+
+    // 开启级联操作，Hibernate 需要一个无参构造函数
     // 否则会报错：org.hibernate.TransientObjectException: object references an unsaved transient instance - save the transient instance before flushing
     public UserEntity() {}
+
+    public Set<GrantedAuthority> getAuthorities() {
+        return permissions == null ? Collections.emptySet() :
+                permissions.stream().map(PermissionEntity::getAuthority).collect(Collectors.toUnmodifiableSet());
+    }
+
+    public UserDetails toUserDetails() {
+        return new User(name, password, getAuthorities());
+    }
 }

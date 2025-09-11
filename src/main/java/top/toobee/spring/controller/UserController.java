@@ -2,13 +2,15 @@ package top.toobee.spring.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.util.Pair;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
+import top.toobee.spring.domain.response.LoginResult;
 import top.toobee.spring.entity.UserEntity;
 import top.toobee.spring.service.UserService;
 
-import java.util.Map;
+import java.net.InetAddress;
 
 @RestController
 @RequestMapping("/api")
@@ -42,8 +44,8 @@ public class UserController {
     public record LoginRequest(String username, String password) {}
 
     @PostMapping("login")
-    public @Nullable Map<String, String> login(@RequestBody LoginRequest request) {
-        return userService.login(request.username(), request.password());
+    public @Nullable Pair<LoginResult, String> login(@RequestBody LoginRequest request) {
+        return userService.login(InetAddress.getLoopbackAddress(), request.username(), request.password());
     }
 }
 

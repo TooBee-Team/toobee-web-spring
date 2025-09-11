@@ -26,12 +26,11 @@ public class JwtUtil {
         this.parser = Jwts.parser().verifyWith(pair.getPublic()).build();
     }
 
-    public String generateToken(String username, Collection<? extends GrantedAuthority> authorities) {
+    public String generateToken(String username) {
         final var now = System.currentTimeMillis();
         return Jwts.builder()
                 .header().type("JWT").and()
                 .subject(username)
-                .claim("roles", authorities)
                 .issuedAt(new Date(now))
                 .expiration(new Date(now + expirationMS))
                 .signWith(privateKey, ALGORITHM)

@@ -1,51 +1,54 @@
 package top.toobee.spring.service;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.util.Pair;
 import org.springframework.lang.NonNull;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.toobee.spring.domain.response.LoginResult;
 import top.toobee.spring.entity.ProfileEntity;
 import top.toobee.spring.entity.UserEntity;
 import top.toobee.spring.repository.UserRepository;
 import top.toobee.spring.utils.JwtUtil;
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.net.InetAddress;
 import java.util.regex.Pattern;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService implements IUserService {
     public static final Pattern NAME_MATCHER = Pattern.compile("^[a-zA-Z0-9_.-]{2,20}$");
 
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
     private final RabbitTemplate rabbitTemplate;
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Autowired
-    public UserService(UserRepository userRepository, JwtUtil jwtUtil, RabbitTemplate rabbitTemplate) {
+    public UserService(UserRepository userRepository, JwtUtil jwtUtil, PasswordEncoder passwordEncoder, RabbitTemplate rabbitTemplate) {
         this.userRepository = userRepository;
         this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public @Nullable UserEntity findById(Integer id) {
+    public @Nullable UserEntity findById(int id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public UserEntity findByName(String name) {
+        return null;
     }
 
     @Transactional
@@ -70,12 +73,15 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity user = userRepository.findByName(username).orElseThrow(() -> new UsernameNotFoundException("用户不存在"));
-        return new User(user.name,user.password,new ArrayList<>());
+        return userRepository
+                .findByName(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User" + username + " not found"))
+                .toUserDetails();
     }
 
     @Transactional
-    public @NonNull Map<String,String> login(@NonNull String name, @NonNull String password) {
+    public @NonNull LoginResult login(@Nullable InetAddress ip, @NonNull String name, @NonNull String password) {
+        /*
         Optional<UserEntity> user = userRepository.findByName(name);
         if (user.isEmpty()) {
             String queueName = "toobee";
@@ -111,7 +117,9 @@ public class UserService implements UserDetailsService {
             e.printStackTrace();
             return Map.of("error", "更新登录时间失败,用户不存在!");
         }
-        return Map.of("token", token);
+
+         */
+        return null;
     }
 
 }
