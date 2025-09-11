@@ -45,5 +45,12 @@ public class UserController {
     public @Nullable Map<String, String> login(@RequestBody LoginRequest request) {
         return userService.login(request.username(), request.password());
     }
+
+    public record UpdatePasswordRequest(String oldPassword,String newPassword) {}
+
+    @PutMapping("change_password")
+    public @Nullable Map<String, String>  changePassword(@RequestHeader("Authorization") String token, @RequestBody UpdatePasswordRequest request) {
+        return userService.changePassword(token, request.oldPassword(), request.newPassword());
+    }
 }
 

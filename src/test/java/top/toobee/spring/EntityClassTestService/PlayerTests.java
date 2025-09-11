@@ -35,7 +35,7 @@ public class PlayerTests {
     @Rollback(false)
     public void createPlayerRole() {
         PlayerRoleEntity entity = new PlayerRoleEntity();
-        entity.name= RandomString.generateRandomString(6);
+        entity.setName(RandomString.generateRandomString(6));
         entity.description = RandomString.generateRandomString(20);
         entityManager.persist(entity);
     }

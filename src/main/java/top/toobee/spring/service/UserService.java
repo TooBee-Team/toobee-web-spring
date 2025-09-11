@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.toobee.spring.controller.UserController;
 import top.toobee.spring.entity.ProfileEntity;
 import top.toobee.spring.entity.UserEntity;
 import top.toobee.spring.repository.UserRepository;
@@ -105,13 +106,28 @@ public class UserService implements UserDetailsService {
         Authentication auth = new UsernamePasswordAuthenticationToken(name, password);
         String token = jwtUtil.generateToken((String) auth.getPrincipal(), auth.getAuthorities());
         //更新登录时间
-        try {
+        /*try {
             userRepository.updateLoginTime(user.get().id);
         }catch (NoSuchElementException e){
             e.printStackTrace();
             return Map.of("error", "更新登录时间失败,用户不存在!");
-        }
+        }*/
         return Map.of("token", token);
     }
 
+    public Map<String,String> changePassword(String token, @NonNull String oldPassword, @NonNull String newPassword) {
+        String name = jwtUtil.extractUsername(token);
+
+        Optional<UserEntity> user = userRepository.findByName(name);
+        if (user.isEmpty()) {
+            return Map.of("error", "用户不存在");
+        }
+        if (!user.get().password.equals(oldPassword)) {
+            return Map.of("error", "旧密码错误");
+        }
+            user.get().password=newPassword;
+            userRepository.save(user.get());
+        return Map.of("success", "密码修改成功");
+
+    }
 }
