@@ -21,9 +21,6 @@ public class ProfileEntity {
     @Column(name = "created_time", nullable = false, updatable = false)
     public LocalDateTime createdTime;
 
-    @Column(name = "last_login_time")
-    public LocalDateTime lastLoginTime;
-
     @Column
     public String email;
 

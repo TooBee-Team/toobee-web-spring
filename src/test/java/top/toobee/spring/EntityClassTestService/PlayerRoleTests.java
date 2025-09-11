@@ -22,7 +22,7 @@ public class PlayerRoleTests {
         PlayerEntity player = entityManager.find(PlayerEntity.class, 5);
         if (player != null) {
             PlayerRoleEntity playerRole = new PlayerRoleEntity();
-            playerRole.name = player.name;
+            playerRole.setName(player.name);
             playerRole.description = RandomString.generateRandomString(15);
             entityManager.persist(playerRole);
             player.playerRole= playerRole;

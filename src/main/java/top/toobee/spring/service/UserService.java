@@ -122,4 +122,19 @@ public class UserService implements IUserService {
         return null;
     }
 
+    public Map<String,String> changePassword(String token, @NonNull String oldPassword, @NonNull String newPassword) {
+        String name = jwtUtil.extractUsername(token);
+
+        Optional<UserEntity> user = userRepository.findByName(name);
+        if (user.isEmpty()) {
+            return Map.of("error", "用户不存在");
+        }
+        if (!user.get().password.equals(oldPassword)) {
+            return Map.of("error", "旧密码错误");
+        }
+            user.get().password=newPassword;
+            userRepository.save(user.get());
+        return Map.of("success", "密码修改成功");
+
+    }
 }

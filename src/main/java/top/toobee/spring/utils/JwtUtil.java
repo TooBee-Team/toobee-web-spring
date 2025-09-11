@@ -38,6 +38,11 @@ public class JwtUtil {
     }
 
     public String extractUsername(String token) {
+        if (token!=null&&token.startsWith("Bearer ")) {
+            token = token.substring(7);
+            token = token.trim();
+        }
+
         return parser.parseSignedClaims(token).getPayload().getSubject();
     }
 }

@@ -30,7 +30,14 @@ public class UserEntity {
     @Column(nullable = false)
     public String password;
 
-    @OneToMany(mappedBy = "name", cascade = CascadeType.ALL, orphanRemoval = true) //mappedBy 关联的是 PermissionEntity 中的 name 属性
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "user_perm", // 指定连接表的名称为 "user_perm
+            // 定义当前实体（UserEntity）在连接表中的外键列，名为 "user_id"，引用 "id" 列
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            // 定义关联实体（PermissionEntity）在连接表中的外键列，名为 "perm_id"，引用 "id" 列
+            inverseJoinColumns = @JoinColumn(name = "perm_id", referencedColumnName = "id")
+    )
     public Set<PermissionEntity> permissions;
 
     public UserEntity(@Nonnull String name, @Nonnull String password) {
