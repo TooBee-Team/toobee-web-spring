@@ -20,10 +20,12 @@ import top.toobee.spring.repository.UserRepository;
 import top.toobee.spring.utils.JwtUtil;
 
 import java.net.InetAddress;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
-public class UserService implements IUserService {
+public class UserService {
     public static final Pattern NAME_MATCHER = Pattern.compile("^[a-zA-Z0-9_.-]{2,20}$");
 
     private final UserRepository userRepository;
@@ -79,9 +81,9 @@ public class UserService implements IUserService {
                 .toUserDetails();
     }
 
+        /*
     @Transactional
     public @NonNull LoginResult login(@Nullable InetAddress ip, @NonNull String name, @NonNull String password) {
-        /*
         Optional<UserEntity> user = userRepository.findByName(name);
         if (user.isEmpty()) {
             String queueName = "toobee";
@@ -118,9 +120,9 @@ public class UserService implements IUserService {
             return Map.of("error", "更新登录时间失败,用户不存在!");
         }
 
-         */
         return null;
     }
+         */
 
     public Map<String,String> changePassword(String token, @NonNull String oldPassword, @NonNull String newPassword) {
         String name = jwtUtil.extractUsername(token);

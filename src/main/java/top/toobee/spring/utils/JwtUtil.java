@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import java.net.InetAddress;
 import java.security.PrivateKey;
-import java.util.Collection;
 import java.util.Date;
 
 @Component
@@ -26,11 +26,13 @@ public class JwtUtil {
         this.parser = Jwts.parser().verifyWith(pair.getPublic()).build();
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username, InetAddress ip, byte mark) {
         final var now = System.currentTimeMillis();
         return Jwts.builder()
                 .header().type("JWT").and()
                 .subject(username)
+                .claim("ip", ip.getHostAddress())
+                .claim("mark", mark)
                 .issuedAt(new Date(now))
                 .expiration(new Date(now + expirationMS))
                 .signWith(privateKey, ALGORITHM)
@@ -38,7 +40,7 @@ public class JwtUtil {
     }
 
     public String extractUsername(String token) {
-        if (token!=null&&token.startsWith("Bearer ")) {
+        if (token != null&&token.startsWith("Bearer ")) {
             token = token.substring(7);
             token = token.trim();
         }
