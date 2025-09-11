@@ -8,11 +8,17 @@ public abstract class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
-    @Column(nullable = false, unique = true)
-    public String name;
+    @Column(updatable = false, nullable = false, unique = true)
+    protected String name;
 
     @Column
     public String description;
 
     public Role() {}
+
+    public String getName() {
+        return name;
+    }
+
+    public abstract void setName(String name);
 }

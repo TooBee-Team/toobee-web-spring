@@ -14,6 +14,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
     public static final SignatureAlgorithm ALGORITHM = Jwts.SIG.EdDSA;
+
     private final PrivateKey privateKey;
     private final JwtParser parser;
     private final long expirationMS;

@@ -7,7 +7,7 @@ CREATE TYPE public.world AS ENUM ('OVERWORLD', 'THE_NETHER', 'THE_END');
 
 CREATE TABLE public.users (
     id              serial PRIMARY KEY,
-    uuid            uuid NOT NULL UNIQUE, -- non-updatable
+    uuid            uuid NOT NULL UNIQUE DEFAULT gen_random_uuid(), -- non-updatable
     name            varchar(20) NOT NULL UNIQUE,
     password        varchar(512) NOT NULL
 ); COMMENT ON TABLE public.users IS '网站用户核心信息';
@@ -15,7 +15,6 @@ CREATE TABLE public.users (
 CREATE TABLE public.user_profile (
     user_id         integer PRIMARY KEY REFERENCES public.users,
     created_time    timestamp NOT NULL DEFAULT now(), -- non-updatable
-    last_login_time timestamp,
     email           varchar(127),
     qq              varchar(12),
     wechat          varchar(64),
@@ -28,6 +27,15 @@ COMMENT ON COLUMN public.user_profile.last_login_time IS '用户上一次登录�
 COMMENT ON COLUMN public.user_profile.nickname IS '昵称';
 COMMENT ON COLUMN public.user_profile.introduction IS '自我介绍';
 CREATE INDEX user_qq_index ON public.user_profile (qq);
+
+CREATE TABLE public.user_login_log (
+    id          bigserial PRIMARY KEY,
+    user_id     integer NOT NULL REFERENCES public.users,
+    ip          inet NOT NULL DEFAULT '0.0.0.0',
+    log_time    timestamp NOT NULL DEFAULT now()
+); COMMENT ON TABLE public.user_login_log IS '用户登录日志';
+CREATE INDEX user_login_log_user_id_index ON public.user_login_log (user_id);
+CREATE INDEX user_login_log_created_time_index ON public.user_login_log (created_time);
 
 CREATE TABLE public.permission (
     id          serial PRIMARY KEY,

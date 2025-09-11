@@ -39,11 +39,11 @@ public class UserController {
         return userService.createRandom();
     }
 
-    public record LoginRequest(String name, String password) {}
+    public record LoginRequest(String username, String password) {}
 
     @PostMapping("login")
     public @Nullable Map<String, String> login(@RequestBody LoginRequest request) {
-        return userService.login(request.name(), request.password());
+        return userService.login(request.username(), request.password());
     }
 }
 

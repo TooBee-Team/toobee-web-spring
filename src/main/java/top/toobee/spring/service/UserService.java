@@ -3,9 +3,9 @@ package top.toobee.spring.service;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Transient;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
 
 @Service
 public class UserService implements UserDetailsService {
-    public static final Pattern NAME_MATCHER = Pattern.compile("^[a-zA-Z0-9_.-]{4,20}$");
+    public static final Pattern NAME_MATCHER = Pattern.compile("^[a-zA-Z0-9_.-]{2,20}$");
 
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
@@ -51,10 +51,10 @@ public class UserService implements UserDetailsService {
     @Transactional
     public @NonNull UserEntity register(@NonNull String name, @NonNull String password) {
         if (userRepository.findByName(name).isPresent()) {
-            throw new IllegalArgumentException("用户名已存在");
+            throw new DuplicateKeyException("Username already exists");
         }
         if (!NAME_MATCHER.matcher(name).matches()) {
-            throw new IllegalArgumentException("用户名格式错误");
+            throw new IllegalArgumentException("Username is invalid");
         }
         final var userEntity = new UserEntity(name, password);
         ProfileEntity profile = new ProfileEntity();

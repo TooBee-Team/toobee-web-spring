@@ -6,6 +6,9 @@ spring:
     name:
       toobee-web-spring
   datasource:
+    hikari:
+      initialization-fail-timeout: 5000
+      connection-timeout: 2000
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: 123456
