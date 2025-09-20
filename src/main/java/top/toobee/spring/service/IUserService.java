@@ -15,26 +15,15 @@ public interface IUserService extends UserDetailsService {
 
     @Nullable UserEntity findUserByName(String name);
 
-    record LoginPair(LoginResult result, @Nullable UserEntity entity) {}
-
-    /**
-     * 从游戏中验证密码
-     * @param name 用户名
-     * @param password 密码
-     * @return 是否密码正确，空值表示该玩家未注册
-     */
-    @Nullable Boolean verifyPasswordFromGame(String name, String password);
-
     /**
      * 检查用户登录的预期行为，并返回用户信息。
-     * 先校验用户名合法性，寻找当前数据库有无该用户。如果无用户，调用 {@link #verifyPasswordFromGame} 决定是否要通过 {@link #register} 注册用户。
-     * 然后返回可能包含用户实体的登录结果。
+     * 先校验用户名合法性，寻找当前数据库有无该用户。如果无用户，从游戏决定是否要通过 {@link #register} 注册用户。
      * @param ip 登录IP
      * @param name 用户名
      * @param password 密码
      * @return 预期的登录结果
      */
-    LoginPair getLoginInfo(InetAddress ip, String name, String password);
+    LoginResult getLoginInfo(InetAddress ip, String name, String password);
 
     /**
      * 尝试修改密码，要求新密码与旧密码不同，且新密码符合密码规则（长度4～30）
@@ -61,7 +50,7 @@ public interface IUserService extends UserDetailsService {
      * @param name 用户名
      * @return 随机生成的 Token 校验码
      */
-    byte afterLogin(InetAddress ip, String name);
+    int afterLogin(InetAddress ip, UserEntity userEntity);
 
     /**
      * 生成JWT令牌
@@ -70,7 +59,7 @@ public interface IUserService extends UserDetailsService {
      * @param mark Token 校验码
      * @return JWT令牌
      */
-    String signAndIssueToken(String name, InetAddress ip, byte mark);
+    String signAndIssueToken(String name, int mark);
 
     /**
      * 从JWT令牌中获取用户实体

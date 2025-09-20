@@ -31,8 +31,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException, JwtException, NullPointerException {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (header != null && header.startsWith("Bearer ")) {
-            final var username = jwtUtil.extractUsername(header.substring(7));
-            final var userEntity = Objects.requireNonNull(userService.findByName(username), "User " + username + " not found");
+            final var username = jwtUtil.extractSubject(header.substring(7));
+            final var userEntity = Objects.requireNonNull(userService.findUserByName(username), "User " + username + " not found");
             SecurityContextHolder.getContext().setAuthentication(
                     new UsernamePasswordAuthenticationToken(username, null, userEntity.getAuthorities()));
         }

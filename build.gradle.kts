@@ -8,6 +8,9 @@ plugins {
 }
 val fastutilVersion = "8.5.16"
 val jjwtVersion = "0.13.0"
+//val hypersistenceUtilsVersion = "3.11.0"
+val bucket4jVersion = "0.13.0"
+val captchaVersion = "1.4.0"
 
 group = "top.toobee"
 version = "0.0.1"
@@ -23,21 +26,24 @@ repositories {
 }
 
 dependencies {
-	setOf("web", "security", "jdbc", "websocket", "data-jpa", "amqp").forEach {
+	setOf("web", "security", "jdbc", "websocket", "data-jpa", "amqp", "cache").forEach {
 		implementation("org.springframework.boot:spring-boot-starter-$it")
 	}
 	//implementation("org.apache.commons:commons-lang3:3.17.0")
 	implementation("it.unimi.dsi:fastutil:$fastutilVersion")
+    implementation("com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:$bucket4jVersion")
+    //implementation("com.anji-plus:captcha-spring-boot-starter:$captchaVersion")
+    //implementation("io.hypersistence:hypersistence-utils-hibernate-70:$hypersistenceUtilsVersion")
 	runtimeOnly("org.postgresql:postgresql")
-
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("org.springframework.amqp:spring-rabbit-test")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
 	implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("org.springframework.amqp:spring-rabbit-test")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 /*

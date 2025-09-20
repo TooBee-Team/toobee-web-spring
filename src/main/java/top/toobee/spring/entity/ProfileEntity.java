@@ -38,4 +38,10 @@ public class ProfileEntity {
 
     @Column
     public String introduction;
+
+    public ProfileEntity() {}
+
+    public ProfileEntity(UserEntity user) {
+        this.user = user;
+    }
 }

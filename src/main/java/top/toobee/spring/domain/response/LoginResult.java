@@ -8,6 +8,8 @@ public enum LoginResult {
     OK(HttpStatus.OK),
     CREATED(HttpStatus.CREATED),
     ILLEGAL_USERNAME,
+    UNKNOWN_PLAYER,
+    FAKE_PLAYER,
     UNREGISTERED,
     WRONG_PASSWORD,
     BANNED,

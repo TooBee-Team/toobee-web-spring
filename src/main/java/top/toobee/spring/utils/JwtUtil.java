@@ -4,7 +4,6 @@ import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
@@ -26,12 +25,11 @@ public class JwtUtil {
         this.parser = Jwts.parser().verifyWith(pair.getPublic()).build();
     }
 
-    public String generateToken(String username, InetAddress ip, byte mark) {
+    public String generateToken(String username, int mark) {
         final var now = System.currentTimeMillis();
         return Jwts.builder()
                 .header().type("JWT").and()
                 .subject(username)
-                .claim("ip", ip.getHostAddress())
                 .claim("mark", mark)
                 .issuedAt(new Date(now))
                 .expiration(new Date(now + expirationMS))
@@ -39,12 +37,11 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String extractUsername(String token) {
-        if (token != null&&token.startsWith("Bearer ")) {
+    public String extractSubject(String token) {
+        if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
             token = token.trim();
         }
-
         return parser.parseSignedClaims(token).getPayload().getSubject();
     }
 }
