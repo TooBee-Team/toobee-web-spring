@@ -44,5 +44,13 @@ public class JwtUtil {
         }
         return parser.parseSignedClaims(token).getPayload().getSubject();
     }
+
+    //获取token过期时间(秒)
+    public long getExpirationDate(String token) {
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7).trim();
+        }
+        return parser.parseSignedClaims(token).getPayload().getExpiration().getTime();
+    }
 }
 

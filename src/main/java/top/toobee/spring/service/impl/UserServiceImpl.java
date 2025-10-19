@@ -19,6 +19,7 @@ import top.toobee.spring.repository.UserRepository;
 import top.toobee.spring.service.AmqpService;
 import top.toobee.spring.service.IUserService;
 import top.toobee.spring.service.PlayerService;
+import top.toobee.spring.utils.DynamicTtlCache;
 import top.toobee.spring.utils.JwtUtil;
 
 import java.net.InetAddress;
@@ -38,10 +39,11 @@ public class UserServiceImpl implements IUserService {
     private final PasswordEncoder passwordEncoder;
     private final PlayerService playerService;
     private final AmqpService amqpService;
+    private final DynamicTtlCache dynamicTtlCache;
 
     @Autowired
     public UserServiceImpl(ProfileRepository profileRepository, UserRepository userRepository, UserLoginLogRepository userLoginLogRepository,
-                           JwtUtil jwtUtil, PasswordEncoder passwordEncoder, PlayerService playerService, AmqpService amqpService) {
+                           JwtUtil jwtUtil, PasswordEncoder passwordEncoder, PlayerService playerService, AmqpService amqpService, DynamicTtlCache dynamicTtlCache) {
         this.profileRepository = profileRepository;
         this.userLoginLogRepository = userLoginLogRepository;
         this.userRepository = userRepository;
@@ -49,6 +51,7 @@ public class UserServiceImpl implements IUserService {
         this.passwordEncoder = passwordEncoder;
         this.playerService = playerService;
         this.amqpService = amqpService;
+        this.dynamicTtlCache = dynamicTtlCache;
     }
 
     @Override
@@ -102,7 +105,13 @@ public class UserServiceImpl implements IUserService {
         if (oldOriginalPassword.equals(newOriginalPassword))
             return ChangePasswordResult.SAME_PASSWORD;
 
+
+        final var isValid = dynamicTtlCache.get(token);
+        if (isValid == null)
+            return ChangePasswordResult.UNKNOWN_USER;
+
         final var user = userRepository.findByName(jwtUtil.extractSubject(token)).orElse(null);
+
         if (user == null)
             return ChangePasswordResult.UNKNOWN_USER;
         if (!passwordEncoder.matches(oldOriginalPassword, user.password))
@@ -141,6 +150,10 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserEntity getUserFromToken(String token) {
+        final var isValid = dynamicTtlCache.get(token);
+        if (isValid == null)
+            return null;
+
         return userRepository.findByName(jwtUtil.extractSubject(token)).orElse(null);
     }
 
@@ -150,7 +163,9 @@ public class UserServiceImpl implements IUserService {
         if (result == LoginResult.OK || result == LoginResult.CREATED) {
             final var user = result == LoginResult.OK ? findUserByName(username) : register(username, password);
             final var mark = afterLogin(ip, user);
-            return ResponseEntity.ok(signAndIssueToken(username, mark));
+            final var token = signAndIssueToken(username, mark);
+            dynamicTtlCache.put(username, token, jwtUtil.getExpirationDate(token));
+            return ResponseEntity.ok(token);
         }
         return result.wrap(null);
     }
