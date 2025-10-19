@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
+import top.toobee.spring.domain.response.ChangePasswordResult;
 import top.toobee.spring.entity.UserEntity;
 import top.toobee.spring.service.IUserService;
 import top.toobee.spring.utils.DynamicTtlCache;
@@ -71,7 +72,7 @@ public class UserController {
     @PutMapping("change_password")
     public ResponseEntity<?> changePassword(@RequestHeader("Authorization") String token, @RequestBody UpdatePasswordRequest request) {
         // TODO
-        return null;
+        return userService.changePassword(token, request.oldPassword(), request.newPassword()).wrap();
     }
 
     @PostMapping("logout")
