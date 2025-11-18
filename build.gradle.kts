@@ -39,11 +39,13 @@ repositories {
 dependencies {
 	setOf("web", "security", "jdbc", "websocket", "data-jpa", "amqp", "cache").forEach {
 		implementation("org.springframework.boot:spring-boot-starter-$it")
+		implementation( "com.github.ben-manes.caffeine:caffeine")
 	}
 	//implementation("org.apache.commons:commons-lang3:3.17.0")
 	implementation("it.unimi.dsi:fastutil:$fastutilVersion")
     //implementation("com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:$bucket4jVersion")
-    //implementation("com.anji-plus:captcha-spring-boot-starter:$captchaVersion")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("com.anji-plus:captcha-spring-boot-starter:$captchaVersion")
     //implementation("io.hypersistence:hypersistence-utils-hibernate-70:$hypersistenceUtilsVersion")
 	runtimeOnly("org.postgresql:postgresql")
 
