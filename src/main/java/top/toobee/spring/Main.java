@@ -1,5 +1,6 @@
 package top.toobee.spring;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +17,7 @@ public final class Main {
 
     public static void main(String[] args) {
         final var ctx = SpringApplication.run(Main.class, args);
-        final var sc = new Scanner(System.in);
+        final var sc = new Scanner(System.in, StandardCharsets.UTF_8);
         if (sc.nextLine().equals("stop")) {
             ctx.close();
             sc.close();

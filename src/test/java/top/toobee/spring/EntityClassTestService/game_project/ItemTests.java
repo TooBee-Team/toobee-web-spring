@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
@@ -24,7 +25,7 @@ public class ItemTests {
         item.identifier = RandomString.generateRandomString(15);
         item.name = RandomString.generateRandomString(15);
         item.creator = entityManager.find(UserEntity.class, 4);
-        item.webpageUpdatedTime = LocalDateTime.now();
+        item.webpageUpdatedTime = LocalDateTime.now(ZoneId.systemDefault());
         item.world = World.OVERWORLD;
         item.x = 5;
         item.y = 5;

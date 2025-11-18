@@ -1,3 +1,4 @@
+import net.ltgt.gradle.errorprone.errorprone
 import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
@@ -7,6 +8,7 @@ plugins {
     alias(libs.plugins.spring.dependencyManagement)
     alias(libs.plugins.graalvmBuildTools)
     alias(libs.plugins.spotless)
+    alias(libs.plugins.errorprone)
 }
 
 group = "top.toobee"
@@ -51,6 +53,9 @@ dependencies {
 
     testRuntimeOnly(libs.junit.platformLauncher)
 
+    errorprone(libs.errorprone.core)
+    errorprone(libs.errorprone.refaster)
+
     //implementation("com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:$bucket4jVersion")
     //implementation("io.hypersistence:hypersistence-utils-hibernate-70:$hypersistenceUtilsVersion")
     //implementation("org.apache.commons:commons-lang3:3.17.0")
@@ -64,10 +69,24 @@ graalvmNative {
 }
  */
 
+
 tasks.named<BootRun>("bootRun") {
 	//workingDir = file("run").apply(File::mkdirs)
 	standardInput = System.`in`
     systemProperty("spring.profiles.active", "dev")
+}
+
+tasks.withType<JavaCompile> {
+    options.errorprone {
+        enable("EqualsBrokenForNull")
+        enable("NegativeBoolean")
+        enable("InitializeInline")
+        enable("Varifier")
+        enable("ReturnMissingNullable")
+        enable("FieldCanBeFinal")
+        enable("FieldCanBeLocal")
+        enable("FieldCanBeStatic")
+    }
 }
 
 tasks.withType<Test> {

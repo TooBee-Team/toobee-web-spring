@@ -1,5 +1,6 @@
 package top.toobee.spring.service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,8 @@ public class AmqpService {
         String userInfo = name + ";" + password;
         String str = "";
         Object o = amqpTemplate.convertSendAndReceive("toobee", userInfo);
-        if (o instanceof byte[]) {
-            str = new String((byte[]) o);
+        if (o instanceof byte[] bytes) {
+            str = new String(bytes, StandardCharsets.UTF_8);
         } else if (o != null) {
             str = o.toString();
         }

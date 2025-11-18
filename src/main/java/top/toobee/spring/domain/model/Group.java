@@ -15,10 +15,10 @@ public class Group implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Group group = (Group) o;
-        return projectId.equals(group.projectId) && playerId.equals(group.playerId);
+        return this == o
+                || (o instanceof Group g
+                        && projectId.equals(g.projectId)
+                        && playerId.equals(g.playerId));
     }
 
     @Override

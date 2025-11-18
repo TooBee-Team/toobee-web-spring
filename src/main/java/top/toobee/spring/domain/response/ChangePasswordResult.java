@@ -1,5 +1,6 @@
 package top.toobee.spring.domain.response;
 
+import java.util.Locale;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -27,7 +28,7 @@ public enum ChangePasswordResult {
                         .body(
                                 new CustomErrorDto(
                                         "toobee:change_password_error",
-                                        this.name().toLowerCase(),
+                                        this.name().toLowerCase(Locale.getDefault()),
                                         null));
     }
 }

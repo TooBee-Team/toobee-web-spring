@@ -3,6 +3,7 @@ package top.toobee.spring.entity;
 import jakarta.persistence.*;
 import java.net.InetAddress;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.PostgreSQLInetJdbcType;
 
@@ -29,6 +30,6 @@ public class UserLoginLogEntity {
     public UserLoginLogEntity(InetAddress ip, UserEntity user) {
         this.user = user;
         this.ip = ip;
-        this.loginTime = LocalDateTime.now();
+        this.loginTime = LocalDateTime.now(ZoneId.systemDefault());
     }
 }

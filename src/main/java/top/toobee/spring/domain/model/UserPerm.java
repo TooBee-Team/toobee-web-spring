@@ -15,10 +15,8 @@ public class UserPerm implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserPerm userPerm = (UserPerm) o;
-        return userId.equals(userPerm.userId) && permId.equals(userPerm.permId);
+        return this == o
+                || (o instanceof UserPerm p && userId.equals(p.userId) && permId.equals(p.permId));
     }
 
     @Override

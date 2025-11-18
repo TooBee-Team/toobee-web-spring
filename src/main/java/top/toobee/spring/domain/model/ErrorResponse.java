@@ -60,10 +60,11 @@ public class ErrorResponse {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ErrorResponse that = (ErrorResponse) o;
-        return status == that.status && error.equals(that.error) && message.equals(that.message);
+        return this == o
+                || (o instanceof ErrorResponse r
+                        && status == r.status
+                        && error.equals(r.error)
+                        && message.equals(r.message));
     }
 
     public static class Builder {
@@ -87,7 +88,7 @@ public class ErrorResponse {
         }
 
         public ErrorResponse build() {
-            ErrorResponse response = new ErrorResponse();
+            final var response = new ErrorResponse();
             response.setStatus(status);
             response.setError(error);
             response.setMessage(message);

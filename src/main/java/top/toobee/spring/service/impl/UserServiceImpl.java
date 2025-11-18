@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.util.Objects;
 import java.util.Random;
 import java.util.regex.Pattern;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.ResponseEntity;
@@ -61,12 +62,12 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public UserEntity findUserById(int id) {
+    public @Nullable UserEntity findUserById(int id) {
         return userRepository.findById(id).orElse(null);
     }
 
     @Override
-    public UserEntity findUserByName(String name) {
+    public @Nullable UserEntity findUserByName(String name) {
         return userRepository.findByName(name).orElse(null);
     }
 
@@ -159,7 +160,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public UserEntity getUserFromToken(String token) {
+    public @Nullable UserEntity getUserFromToken(String token) {
         final var isValid = dynamicTtlCache.get(token);
         if (isValid == null) return null;
 

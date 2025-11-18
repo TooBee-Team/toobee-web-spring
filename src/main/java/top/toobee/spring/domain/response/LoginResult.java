@@ -1,5 +1,6 @@
 package top.toobee.spring.domain.response;
 
+import java.util.Locale;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
@@ -31,6 +32,8 @@ public enum LoginResult {
                         this == OK || this == CREATED
                                 ? result
                                 : new CustomErrorDto(
-                                        "toobee:login_error", this.name().toLowerCase(), null));
+                                        "toobee:login_error",
+                                        this.name().toLowerCase(Locale.getDefault()),
+                                        null));
     }
 }

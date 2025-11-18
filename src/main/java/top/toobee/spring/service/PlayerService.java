@@ -1,6 +1,7 @@
 package top.toobee.spring.service;
 
 import java.util.Optional;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 import top.toobee.spring.entity.PlayerEntity;
 import top.toobee.spring.repository.PlayerRepository;
@@ -17,7 +18,7 @@ public class PlayerService {
         return playerRepository.findFakeByName(username);
     }
 
-    public PlayerEntity getPlayerByName(String name) {
+    public @Nullable PlayerEntity getPlayerByName(String name) {
         return playerRepository.findByName(name).orElse(null);
     }
 

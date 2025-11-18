@@ -1,6 +1,5 @@
 package top.toobee.spring.controller;
 
-import com.anji.captcha.model.common.ResponseModel;
 import com.anji.captcha.model.vo.CaptchaVO;
 import com.anji.captcha.service.CaptchaService;
 import java.net.InetAddress;
@@ -58,9 +57,9 @@ public class UserController {
 
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        CaptchaVO captchaVO = new CaptchaVO();
+        final var captchaVO = new CaptchaVO();
         captchaVO.setCaptchaVerification(request.captchaVerification);
-        ResponseModel response = captchaService.verification(captchaVO);
+        final var response = captchaService.verification(captchaVO);
         if (!response.isSuccess()) {
             return ResponseEntity.badRequest().body(response.getRepMsg());
         }

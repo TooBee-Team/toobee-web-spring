@@ -5,6 +5,7 @@ import com.anji.captcha.model.vo.CaptchaVO;
 import com.anji.captcha.service.CaptchaService;
 import com.anji.captcha.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,9 +50,9 @@ public class CaptchaController {
         return request.getRemoteHost() + ua;
     }
 
-    private static String getRemoteIpFromXfwd(String xfwd) {
+    private static @Nullable String getRemoteIpFromXfwd(String xfwd) {
         if (StringUtils.isNotBlank(xfwd)) {
-            String[] ipList = xfwd.split(",");
+            final var ipList = xfwd.split(",", -1);
             return StringUtils.trim(ipList[0]);
         }
         return null;
