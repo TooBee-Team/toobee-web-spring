@@ -23,7 +23,7 @@ java {
 spotless {
     java {
         target("src/**/*.java")
-        targetExclude("**/build/**", "**/generated/**")
+        targetExclude("build/**", "generated/**", "patches/**", "logs/**")
         googleJavaFormat().aosp()
         removeUnusedImports()
         trimTrailingWhitespace()
@@ -86,6 +86,10 @@ tasks.withType<JavaCompile> {
         enable("FieldCanBeFinal")
         enable("FieldCanBeLocal")
         enable("FieldCanBeStatic")
+
+        errorproneArgs.addAll(
+            "-XepPatchLocation:$projectDir/patches"
+        )
     }
 }
 
@@ -101,4 +105,21 @@ tasks.test {
     onlyIf("runTests property present") {
         project.hasProperty("runTests")
     }
+}
+
+tasks.register<Exec>("applyPatches") {
+    group = "custom"
+
+    doFirst {
+        val probe = providers.exec {
+            commandLine("git", "--version")
+            isIgnoreExitValue = true
+        }
+        if (probe.result.get().exitValue != 0) {
+            throw GradleException("Git not found in PATH.")
+        }
+    }
+
+    projectDir.resolve("patches").listFiles { _, name -> name.endsWith(".patch") }
+        ?.forEach { commandLine("git", "apply", "--ignore-whitespace", it.absolutePath) }
 }

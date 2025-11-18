@@ -1,5 +1,7 @@
 [versions]
 captcha = "1.4.0"
+errorproneCore = "2.44.0"
+errprproneGradle = "4.3.0"
 fastutil = "8.5.18"
 graalvmBuildTools = "0.11.3"
 jjwt = "0.13.0"
@@ -8,12 +10,12 @@ springBoot = "3.5.7"
 springDepMan = "1.1.7"
 thumbnailator = "0.4.21"
 updateCatalog = "1.0.1"
-errprproneGradle = "4.3.0"
-errorproneCore = "2.44.0"
 
 [libraries]
 caffeine = { module = "com.github.ben-manes.caffeine:caffeine" }
 captcha = { module = "com.anji-plus:captcha-spring-boot-starter", version.ref = "captcha" }
+errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorproneCore" }
+errorprone-refaster = { module = "com.google.errorprone:error_prone_refaster", version.ref = "errorproneCore" }
 fastutil = { module = "it.unimi.dsi:fastutil", version.ref = "fastutil" }
 jjwt-api = { module = "io.jsonwebtoken:jjwt-api", version.ref = "jjwt" }
 jjwt-impl = { module = "io.jsonwebtoken:jjwt-impl", version.ref = "jjwt" }
@@ -24,16 +26,14 @@ test-spring-amqp = { module = "org.springframework.amqp:spring-rabbit-test" }
 test-spring-boot = { module = "org.springframework.boot:spring-boot-starter-test" }
 test-spring-security = { module = "org.springframework.security:spring-security-test" }
 thumbnailator = { module = "net.coobird:thumbnailator", version.ref = "thumbnailator" }
-errorprone-core = { module = "com.google.errorprone:error_prone_core", version.ref = "errorproneCore" }
-errorprone-refaster = { module = "com.google.errorprone:error_prone_refaster", version.ref = "errorproneCore" }
 
 [plugins]
+errorprone = { id = "net.ltgt.errorprone", version.ref = "errprproneGradle" }
 graalvmBuildTools = { id = "org.graalvm.buildtools.native", version.ref = "graalvmBuildTools" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 spring-boot = { id = "org.springframework.boot", version.ref = "springBoot" }
 spring-dependencyManagement = { id = "io.spring.dependency-management", version.ref = "springDepMan" }
 updateCatalog = { id = "nl.littlerobots.version-catalog-update", version.ref = "updateCatalog" }
-errorprone = { id = "net.ltgt.errorprone", version.ref = "errprproneGradle" }
 
 [bundles]
 test-spring = [
