@@ -10,8 +10,7 @@ import top.toobee.spring.entity.PlayerEntity;
 @Entity
 @Table(schema = "game_project", name = "group")
 public class GroupEntity {
-    @EmbeddedId
-    public Group id;
+    @EmbeddedId public Group id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("projectId")

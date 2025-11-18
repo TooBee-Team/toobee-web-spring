@@ -1,9 +1,8 @@
 package top.toobee.spring.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDateTime;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(schema = "public", name = "user_profile")
@@ -21,23 +20,17 @@ public class ProfileEntity {
     @Column(name = "created_time", nullable = false, updatable = false)
     public LocalDateTime createdTime;
 
-    @Column
-    public String email;
+    @Column public String email;
 
-    @Column
-    public String qq;
+    @Column public String qq;
 
-    @Column
-    public String wechat;
+    @Column public String wechat;
 
-    @Column
-    public String telegram;
+    @Column public String telegram;
 
-    @Column
-    public String nickname;
+    @Column public String nickname;
 
-    @Column
-    public String introduction;
+    @Column public String introduction;
 
     public ProfileEntity() {}
 

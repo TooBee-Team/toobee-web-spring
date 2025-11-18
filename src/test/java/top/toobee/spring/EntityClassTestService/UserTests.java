@@ -13,17 +13,20 @@ import top.toobee.spring.entity.UserPermEntity;
 
 @SpringBootTest
 public class UserTests {
-    @PersistenceContext
-    private EntityManager entityManager;
+    @PersistenceContext private EntityManager entityManager;
 
     @Test
     @Transactional
     @Rollback(false)
     public void createUser() {
-        UserEntity user = new UserEntity(RandomString.generateRandomString(6),"123456");
+        UserEntity user = new UserEntity(RandomString.generateRandomString(6), "123456");
         ProfileEntity profile = new ProfileEntity();
         profile.user = user;
-        profile.email = RandomString.generateRandomString(6) + "@" + RandomString.generateRandomString(6) + ".com";
+        profile.email =
+                RandomString.generateRandomString(6)
+                        + "@"
+                        + RandomString.generateRandomString(6)
+                        + ".com";
         profile.wechat = RandomString.generateRandomString(13);
         entityManager.persist(profile);
         entityManager.persist(user);
@@ -36,5 +39,4 @@ public class UserTests {
         UserPermEntity userPermEntity = new UserPermEntity();
         userPermEntity.user.id = entityManager.find(UserEntity.class, "test3").id;
     }
-
 }

@@ -5,5 +5,4 @@ import org.springframework.stereotype.Repository;
 import top.toobee.spring.entity.ProfileEntity;
 
 @Repository
-public interface ProfileRepository extends JpaRepository<ProfileEntity, Integer> {
-}
+public interface ProfileRepository extends JpaRepository<ProfileEntity, Integer> {}

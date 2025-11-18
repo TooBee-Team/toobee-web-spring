@@ -1,5 +1,6 @@
 package top.toobee.spring.controller;
 
+import java.net.InetAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
@@ -8,8 +9,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import top.toobee.spring.entity.UserEntity;
 import top.toobee.spring.service.IUserService;
-
-import java.net.InetAddress;
 
 @RestController
 @RequestMapping("/api")
@@ -28,7 +27,8 @@ public class UserController {
 
     @Profile("!prod")
     @PostMapping("/user/register")
-    public @NonNull UserEntity register(@RequestParam("name") String name, @RequestParam("password") String password) {
+    public @NonNull UserEntity register(
+            @RequestParam("name") String name, @RequestParam("password") String password) {
         if (name.isBlank() || password.isEmpty())
             throw new IllegalArgumentException("name or password is empty");
         return userService.register(name, password);
@@ -46,15 +46,17 @@ public class UserController {
 
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        return userService.tryLoginAndGetToken(InetAddress.getLoopbackAddress(), request.username(), request.password());
+        return userService.tryLoginAndGetToken(
+                InetAddress.getLoopbackAddress(), request.username(), request.password());
     }
 
     public record UpdatePasswordRequest(String oldPassword, String newPassword) {}
 
     @PutMapping("change_password")
-    public ResponseEntity<?> changePassword(@RequestHeader("Authorization") String token, @RequestBody UpdatePasswordRequest request) {
+    public ResponseEntity<?> changePassword(
+            @RequestHeader("Authorization") String token,
+            @RequestBody UpdatePasswordRequest request) {
         // TODO
         return null;
     }
 }
-

@@ -7,14 +7,14 @@ public class ErrorResponse {
     private String error;
     private String message;
 
-    public ErrorResponse() {
-    }
+    public ErrorResponse() {}
 
     public ErrorResponse(int status, String error, String message) {
         this.status = status;
         this.error = error;
         this.message = message;
     }
+
     public int getStatus() {
         return status;
     }
@@ -41,16 +41,23 @@ public class ErrorResponse {
 
     @Override
     public String toString() {
-        return "ErrorResponse{" +
-                "status=" + status +
-                ", error='" + error + '\'' +
-                ", message='" + message + '\'' +
-                '}';
+        return "ErrorResponse{"
+                + "status="
+                + status
+                + ", error='"
+                + error
+                + '\''
+                + ", message='"
+                + message
+                + '\''
+                + '}';
     }
+
     @Override
     public int hashCode() {
         return Objects.hash(status, error, message);
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -58,6 +65,7 @@ public class ErrorResponse {
         ErrorResponse that = (ErrorResponse) o;
         return status == that.status && error.equals(that.error) && message.equals(that.message);
     }
+
     public static class Builder {
         private int status;
         private String error;
@@ -79,15 +87,15 @@ public class ErrorResponse {
         }
 
         public ErrorResponse build() {
-            ErrorResponse response =  new ErrorResponse();
+            ErrorResponse response = new ErrorResponse();
             response.setStatus(status);
             response.setError(error);
             response.setMessage(message);
             return response;
         }
+
         public static Builder builder() {
             return new Builder();
         }
-
     }
 }

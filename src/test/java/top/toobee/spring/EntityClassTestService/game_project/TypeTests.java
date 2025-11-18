@@ -11,13 +11,12 @@ import top.toobee.spring.entity.game_project.TypeEntity;
 
 @SpringBootTest
 public class TypeTests {
-    @PersistenceContext
-    private EntityManager entityManager;
+    @PersistenceContext private EntityManager entityManager;
 
     @Test
     @Transactional
     @Rollback(false)
-    public void createType(){
+    public void createType() {
         TypeEntity type = new TypeEntity();
         type.description = RandomString.generateRandomString(15);
         type.name = RandomString.generateRandomString(15);

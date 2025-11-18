@@ -1,16 +1,14 @@
 package top.toobee.spring.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import top.toobee.spring.domain.model.UserPerm;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(schema = "public", name = "user_perm")
 public class UserPermEntity {
-    @EmbeddedId
-    public UserPerm id;
+    @EmbeddedId public UserPerm id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("userId")

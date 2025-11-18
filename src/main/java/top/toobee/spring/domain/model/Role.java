@@ -11,8 +11,7 @@ public abstract class Role {
     @Column(updatable = false, nullable = false, unique = true)
     protected String name;
 
-    @Column
-    public String description;
+    @Column public String description;
 
     public Role() {}
 

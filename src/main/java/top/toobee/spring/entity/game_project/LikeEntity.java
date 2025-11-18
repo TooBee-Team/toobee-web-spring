@@ -1,10 +1,9 @@
 package top.toobee.spring.entity.game_project;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import top.toobee.spring.entity.UserEntity;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(schema = "game_project", name = "like")

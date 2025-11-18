@@ -3,12 +3,10 @@ package top.toobee.spring.utils;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import java.net.InetAddress;
 import java.security.PrivateKey;
 import java.util.Date;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtil {
@@ -28,7 +26,9 @@ public class JwtUtil {
     public String generateToken(String username, int mark) {
         final var now = System.currentTimeMillis();
         return Jwts.builder()
-                .header().type("JWT").and()
+                .header()
+                .type("JWT")
+                .and()
                 .subject(username)
                 .claim("mark", mark)
                 .issuedAt(new Date(now))
@@ -45,4 +45,3 @@ public class JwtUtil {
         return parser.parseSignedClaims(token).getPayload().getSubject();
     }
 }
-

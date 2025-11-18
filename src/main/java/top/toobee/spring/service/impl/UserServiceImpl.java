@@ -1,6 +1,10 @@
 package top.toobee.spring.service.impl;
 
 import jakarta.transaction.Transactional;
+import java.net.InetAddress;
+import java.util.Objects;
+import java.util.Random;
+import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +25,6 @@ import top.toobee.spring.service.IUserService;
 import top.toobee.spring.service.PlayerService;
 import top.toobee.spring.utils.JwtUtil;
 
-import java.net.InetAddress;
-import java.util.Objects;
-import java.util.Random;
-import java.util.regex.Pattern;
-
 @Service
 public class UserServiceImpl implements IUserService {
     public static final Pattern NAME_MATCHER = Pattern.compile("^[a-zA-Z0-9_.-]{2,20}$");
@@ -40,8 +39,14 @@ public class UserServiceImpl implements IUserService {
     private final AmqpService amqpService;
 
     @Autowired
-    public UserServiceImpl(ProfileRepository profileRepository, UserRepository userRepository, UserLoginLogRepository userLoginLogRepository,
-                           JwtUtil jwtUtil, PasswordEncoder passwordEncoder, PlayerService playerService, AmqpService amqpService) {
+    public UserServiceImpl(
+            ProfileRepository profileRepository,
+            UserRepository userRepository,
+            UserLoginLogRepository userLoginLogRepository,
+            JwtUtil jwtUtil,
+            PasswordEncoder passwordEncoder,
+            PlayerService playerService,
+            AmqpService amqpService) {
         this.profileRepository = profileRepository;
         this.userLoginLogRepository = userLoginLogRepository;
         this.userRepository = userRepository;
@@ -63,21 +68,29 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public LoginResult getLoginInfo(InetAddress ip, String name, String password) {
-        return NAME_MATCHER.matcher(name).matches() ? userRepository
-                .findPasswordByName(name)
-                .map(s -> passwordEncoder.matches(s, password) ? LoginResult.OK : LoginResult.WRONG_PASSWORD)
-                .orElseGet(() -> {
-                    var opt = playerService.isFakeOf(name);
-                    if (opt.isEmpty())
-                        return LoginResult.UNKNOWN_PLAYER;
-                    if (opt.get())
-                        return LoginResult.FAKE_PLAYER;
-                    return amqpService
-                            .verifyPasswordFromGame(name, password)
-                            .map(b -> b ? LoginResult.CREATED : LoginResult.WRONG_PASSWORD)
-                            .orElse(LoginResult.UNREGISTERED);
-                })
-        : LoginResult.ILLEGAL_USERNAME;
+        return NAME_MATCHER.matcher(name).matches()
+                ? userRepository
+                        .findPasswordByName(name)
+                        .map(
+                                s ->
+                                        passwordEncoder.matches(s, password)
+                                                ? LoginResult.OK
+                                                : LoginResult.WRONG_PASSWORD)
+                        .orElseGet(
+                                () -> {
+                                    var opt = playerService.isFakeOf(name);
+                                    if (opt.isEmpty()) return LoginResult.UNKNOWN_PLAYER;
+                                    if (opt.get()) return LoginResult.FAKE_PLAYER;
+                                    return amqpService
+                                            .verifyPasswordFromGame(name, password)
+                                            .map(
+                                                    b ->
+                                                            b
+                                                                    ? LoginResult.CREATED
+                                                                    : LoginResult.WRONG_PASSWORD)
+                                            .orElse(LoginResult.UNREGISTERED);
+                                })
+                : LoginResult.ILLEGAL_USERNAME;
         /* 换种写法
         if (!NAME_MATCHER.matcher(name).matches())
             return LoginResult.ILLEGAL_USERNAME;
@@ -95,16 +108,15 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public ChangePasswordResult changePassword(String token, String oldOriginalPassword, String newOriginalPassword) {
+    public ChangePasswordResult changePassword(
+            String token, String oldOriginalPassword, String newOriginalPassword) {
         final int len = newOriginalPassword.length();
-        if (len < 4 || len > 30)
-            return ChangePasswordResult.ILLEGAL_NEW_PASSWORD;
+        if (len < 4 || len > 30) return ChangePasswordResult.ILLEGAL_NEW_PASSWORD;
         if (oldOriginalPassword.equals(newOriginalPassword))
             return ChangePasswordResult.SAME_PASSWORD;
 
         final var user = userRepository.findByName(jwtUtil.extractSubject(token)).orElse(null);
-        if (user == null)
-            return ChangePasswordResult.UNKNOWN_USER;
+        if (user == null) return ChangePasswordResult.UNKNOWN_USER;
         if (!passwordEncoder.matches(oldOriginalPassword, user.password))
             return ChangePasswordResult.WRONG_OLD_PASSWORD;
 
@@ -115,7 +127,8 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Transactional
-    public UserEntity register(String name, String originalPassword) throws IllegalArgumentException, DuplicateKeyException {
+    public UserEntity register(String name, String originalPassword)
+            throws IllegalArgumentException, DuplicateKeyException {
         if (!NAME_MATCHER.matcher(name).matches())
             throw new IllegalArgumentException("Illegal username");
         final var user = new UserEntity(name, passwordEncoder.encode(originalPassword));
@@ -148,7 +161,10 @@ public class UserServiceImpl implements IUserService {
     public ResponseEntity<?> tryLoginAndGetToken(InetAddress ip, String username, String password) {
         final var result = getLoginInfo(ip, username, password);
         if (result == LoginResult.OK || result == LoginResult.CREATED) {
-            final var user = result == LoginResult.OK ? findUserByName(username) : register(username, password);
+            final var user =
+                    result == LoginResult.OK
+                            ? findUserByName(username)
+                            : register(username, password);
             final var mark = afterLogin(ip, user);
             return ResponseEntity.ok(signAndIssueToken(username, mark));
         }

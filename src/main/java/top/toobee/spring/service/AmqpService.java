@@ -1,10 +1,9 @@
 package top.toobee.spring.service;
 
+import java.util.Optional;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class AmqpService {
@@ -24,11 +23,8 @@ public class AmqpService {
         } else if (o != null) {
             str = o.toString();
         }
-        if (str.equals("OK"))
-            return Optional.of(Boolean.TRUE);
-        else if(str.equals("NO"))
-            return Optional.of(Boolean.FALSE);
-        else
-            return Optional.empty();
+        if (str.equals("OK")) return Optional.of(Boolean.TRUE);
+        else if (str.equals("NO")) return Optional.of(Boolean.FALSE);
+        else return Optional.empty();
     }
 }

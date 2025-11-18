@@ -12,13 +12,14 @@ public final class TooBeeLoggingSystem extends LogbackLoggingSystem {
     }
 
     @Override
-    protected void loadDefaults(LoggingInitializationContext initializationContext, LogFile logFile) {
+    protected void loadDefaults(
+            LoggingInitializationContext initializationContext, LogFile logFile) {
         final var context = (LoggerContext) LoggerFactory.getILoggerFactory();
         new LogbackConfigurator(
-                Integer.parseInt(System.getProperty("logging.periods", "1")),
-                Integer.parseInt(System.getProperty("logging.max_size_kb", "1024")),
-                context
-        ).configure0();
+                        Integer.parseInt(System.getProperty("logging.periods", "1")),
+                        Integer.parseInt(System.getProperty("logging.max_size_kb", "1024")),
+                        context)
+                .configure0();
         context.start();
     }
 }

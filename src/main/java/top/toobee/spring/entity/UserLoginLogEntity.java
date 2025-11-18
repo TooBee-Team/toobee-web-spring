@@ -1,11 +1,10 @@
 package top.toobee.spring.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcType;
-import org.hibernate.dialect.PostgreSQLInetJdbcType;
-
 import java.net.InetAddress;
 import java.time.LocalDateTime;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLInetJdbcType;
 
 @Entity
 @Table(schema = "public", name = "user_login_log")
@@ -25,8 +24,7 @@ public class UserLoginLogEntity {
     @Column(nullable = false, name = "login_time")
     public LocalDateTime loginTime;
 
-    public UserLoginLogEntity() {
-    }
+    public UserLoginLogEntity() {}
 
     public UserLoginLogEntity(InetAddress ip, UserEntity user) {
         this.user = user;

@@ -9,9 +9,7 @@ public class TypeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
 
-    @Column
-    public String name;
+    @Column public String name;
 
-    @Column
-    public String description;
+    @Column public String description;
 }

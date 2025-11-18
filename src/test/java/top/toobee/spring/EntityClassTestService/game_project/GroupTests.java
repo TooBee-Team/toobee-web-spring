@@ -6,23 +6,23 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import top.toobee.spring.RandomString;
 import top.toobee.spring.domain.enums.UserRole;
-import top.toobee.spring.domain.model.Role;
 import top.toobee.spring.entity.PlayerEntity;
 import top.toobee.spring.entity.game_project.GroupEntity;
 import top.toobee.spring.entity.game_project.ItemEntity;
 
 @SpringBootTest
 public class GroupTests {
-    @PersistenceContext
-    private EntityManager entityManager;
+    @PersistenceContext private EntityManager entityManager;
 
     @Test
     @Transactional
     @Rollback(false)
     public void createGroup() {
-        GroupEntity group = new GroupEntity(entityManager.find(ItemEntity.class,1),entityManager.find(PlayerEntity.class,4));
+        GroupEntity group =
+                new GroupEntity(
+                        entityManager.find(ItemEntity.class, 1),
+                        entityManager.find(PlayerEntity.class, 4));
         group.role = UserRole.OWNER;
         entityManager.persist(group);
     }

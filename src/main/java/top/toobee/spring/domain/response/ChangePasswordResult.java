@@ -21,7 +21,13 @@ public enum ChangePasswordResult {
     }
 
     public ResponseEntity<?> wrap() {
-        return this == SUCCESS ? ResponseEntity.ok(null) :
-                ResponseEntity.status(status).body(new CustomErrorDto("toobee:change_password_error", this.name().toLowerCase(), null));
+        return this == SUCCESS
+                ? ResponseEntity.ok(null)
+                : ResponseEntity.status(status)
+                        .body(
+                                new CustomErrorDto(
+                                        "toobee:change_password_error",
+                                        this.name().toLowerCase(),
+                                        null));
     }
 }

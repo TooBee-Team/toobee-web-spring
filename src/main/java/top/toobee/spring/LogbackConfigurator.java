@@ -10,10 +10,10 @@ import ch.qos.logback.core.rolling.DefaultTimeBasedFileNamingAndTriggeringPolicy
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy;
 import ch.qos.logback.core.util.FileSize;
-
 import java.time.Instant;
 
-final class LogbackConfigurator extends DefaultTimeBasedFileNamingAndTriggeringPolicy<ILoggingEvent> {
+final class LogbackConfigurator
+        extends DefaultTimeBasedFileNamingAndTriggeringPolicy<ILoggingEvent> {
     private final int periods;
     private final int maxLogSizeKb;
 
@@ -33,7 +33,8 @@ final class LogbackConfigurator extends DefaultTimeBasedFileNamingAndTriggeringP
 
         final var e1 = new PatternLayoutEncoder();
         final var ca = new ConsoleAppender<ILoggingEvent>();
-        e1.setPattern("%green(%d{MM-dd'T'HH:mm:ss.SSS}) %highlight(%-5level) [%thread] %cyan(%logger): %msg%n");
+        e1.setPattern(
+                "%green(%d{MM-dd'T'HH:mm:ss.SSS}) %highlight(%-5level) [%thread] %cyan(%logger): %msg%n");
         e1.setContext(context);
         e1.setParent(ca);
         e1.start();
@@ -46,7 +47,8 @@ final class LogbackConfigurator extends DefaultTimeBasedFileNamingAndTriggeringP
         final var e2 = new PatternLayoutEncoder();
         final var pl = new SizeAndTimeBasedRollingPolicy<ILoggingEvent>();
         e2.setContext(context);
-        e2.setPattern("%d{yyyy-MM-dd'T'HH:mm:ss.SSS} %-5level [%thread] \\(\\(%logger\\)\\) %msg%n");
+        e2.setPattern(
+                "%d{yyyy-MM-dd'T'HH:mm:ss.SSS} %-5level [%thread] \\(\\(%logger\\)\\) %msg%n");
         e2.setParent(fa);
         e2.start();
         pl.setContext(context);

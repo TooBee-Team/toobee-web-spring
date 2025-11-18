@@ -26,7 +26,11 @@ public enum LoginResult {
     }
 
     public ResponseEntity<?> wrap(@Nullable String result) {
-        return ResponseEntity.status(status).body(this == OK || this == CREATED ?
-                result : new CustomErrorDto("toobee:login_error", this.name().toLowerCase(), null));
+        return ResponseEntity.status(status)
+                .body(
+                        this == OK || this == CREATED
+                                ? result
+                                : new CustomErrorDto(
+                                        "toobee:login_error", this.name().toLowerCase(), null));
     }
 }

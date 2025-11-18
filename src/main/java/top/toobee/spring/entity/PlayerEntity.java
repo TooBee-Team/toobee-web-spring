@@ -1,7 +1,6 @@
 package top.toobee.spring.entity;
 
 import jakarta.persistence.*;
-
 import java.util.UUID;
 
 @Entity
