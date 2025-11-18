@@ -9,11 +9,9 @@ import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class CaptchaConfig {
-
     @Bean(name = "AjCaptchaCacheService")
     @Primary
     public CaptchaCacheService captchaCacheService(AjCaptchaProperties config) {
         return CaptchaServiceFactory.getCache(config.getCacheType().name());
     }
-
 }

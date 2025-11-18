@@ -9,8 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import top.toobee.spring.service.IUserService;
@@ -41,13 +39,11 @@ public class SecurityConfig {
                                         .anyRequest()
                                         .permitAll())
                 // .exceptionHandling(ex ->
-                //        ex.authenticationEntryPoint(new JwtAuthEntryPoint())
-                //                .accessDeniedHandler(new JwtAccessDeniedHandler()))
+                // ex.authenticationEntryPoint(new JwtAuthEntryPoint())
+                // .accessDeniedHandler(new JwtAccessDeniedHandler()))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .userDetailsService(userService)
                 .build();
     }
-
-
 }

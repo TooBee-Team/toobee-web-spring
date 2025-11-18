@@ -3,35 +3,35 @@ package top.toobee.spring.controller;
 import com.anji.captcha.model.common.ResponseModel;
 import com.anji.captcha.model.vo.CaptchaVO;
 import com.anji.captcha.service.CaptchaService;
+import java.net.InetAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
-import top.toobee.spring.domain.response.ChangePasswordResult;
 import top.toobee.spring.entity.UserEntity;
 import top.toobee.spring.service.IUserService;
 import top.toobee.spring.utils.DynamicTtlCache;
-
-import java.net.InetAddress;
 
 @RestController
 @RequestMapping("/api")
 public class UserController {
     private final IUserService userService;
 
+    private final CaptchaService captchaService;
+
+    private final DynamicTtlCache dynamicTtlCache;
 
     @Autowired
-    public UserController(IUserService userService) {
+    public UserController(
+            IUserService userService,
+            CaptchaService captchaService,
+            DynamicTtlCache dynamicTtlCache) {
         this.userService = userService;
+        this.captchaService = captchaService;
+        this.dynamicTtlCache = dynamicTtlCache;
     }
-
-    @Autowired
-    private CaptchaService captchaService;
-
-    @Autowired
-    private  DynamicTtlCache dynamicTtlCache;
 
     @GetMapping("/user/get/{id}")
     public @Nullable UserEntity get(@PathVariable("id") Integer id) {
@@ -48,26 +48,24 @@ public class UserController {
     }
 
     /*
-    @Profile("!prod")
-    @GetMapping("/user/create")
-    public @NonNull UserEntity create() {
-        return userService.createRandom();
-    }
+     * @Profile("!prod")
+     *
+     * @GetMapping("/user/create") public @NonNull UserEntity create() { return
+     * userService.createRandom(); }
      */
 
     public record LoginRequest(String username, String password, String captchaVerification) {}
 
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        return userService.tryLoginAndGetToken(
-                InetAddress.getLoopbackAddress(), request.username(), request.password());
         CaptchaVO captchaVO = new CaptchaVO();
         captchaVO.setCaptchaVerification(request.captchaVerification);
         ResponseModel response = captchaService.verification(captchaVO);
         if (!response.isSuccess()) {
             return ResponseEntity.badRequest().body(response.getRepMsg());
         }
-        return userService.tryLoginAndGetToken(InetAddress.getLoopbackAddress(), request.username(), request.password());
+        return userService.tryLoginAndGetToken(
+                InetAddress.getLoopbackAddress(), request.username(), request.password());
     }
 
     public record UpdatePasswordRequest(String oldPassword, String newPassword) {}
@@ -77,7 +75,9 @@ public class UserController {
             @RequestHeader("Authorization") String token,
             @RequestBody UpdatePasswordRequest request) {
         // TODO
-        return userService.changePassword(token, request.oldPassword(), request.newPassword()).wrap();
+        return userService
+                .changePassword(token, request.oldPassword(), request.newPassword())
+                .wrap();
     }
 
     @PostMapping("logout")

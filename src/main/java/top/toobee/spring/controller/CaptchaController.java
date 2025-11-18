@@ -14,13 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/captcha")
 public class CaptchaController {
+    private final CaptchaService captchaService;
 
     @Autowired
-    private CaptchaService captchaService;
+    public CaptchaController(CaptchaService captchaService) {
+        this.captchaService = captchaService;
+    }
 
     @PostMapping("/get")
     public ResponseModel get(@RequestBody CaptchaVO data, HttpServletRequest request) {
-        assert request.getRemoteHost()!=null;
+        assert request.getRemoteHost() != null;
         data.setBrowserInfo(getRemoteId(request));
         return captchaService.get(data);
     }
@@ -36,11 +39,11 @@ public class CaptchaController {
         return captchaService.verification(data);
     }
 
-    public static final String getRemoteId(HttpServletRequest request) {
+    public static String getRemoteId(HttpServletRequest request) {
         String xfwd = request.getHeader("X-Forwarded-For");
         String ip = getRemoteIpFromXfwd(xfwd);
         String ua = request.getHeader("user-agent");
-        if (StringUtils.isNotBlank(ip)){
+        if (StringUtils.isNotBlank(ip)) {
             return ip + ua;
         }
         return request.getRemoteHost() + ua;

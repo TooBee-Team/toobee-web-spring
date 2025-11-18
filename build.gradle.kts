@@ -2,16 +2,12 @@ import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
 	java
-	id("org.springframework.boot") version "3.5.7"
-	id("io.spring.dependency-management") version "1.1.7"
-	id("org.graalvm.buildtools.native") version "0.10.6"
-    id("com.diffplug.spotless") version "8.0.0"
+    alias(libs.plugins.updateCatalog)
+	alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependencyManagement)
+    alias(libs.plugins.graalvmBuildTools)
+    alias(libs.plugins.spotless)
 }
-val fastutilVersion = "8.5.18"
-val jjwtVersion = "0.13.0"
-//val hypersistenceUtilsVersion = "3.11.0"
-val bucket4jVersion = "0.13.0"
-val captchaVersion = "1.4.0"
 
 group = "top.toobee"
 version = "0.0.1"
@@ -24,8 +20,9 @@ java {
 
 spotless {
     java {
-        //eclipse().configFile("gradle/idea-eclipse.xml")
-        googleJavaFormat("1.32.0").aosp()
+        target("src/**/*.java")
+        targetExclude("**/build/**", "**/generated/**")
+        googleJavaFormat().aosp()
         removeUnusedImports()
         trimTrailingWhitespace()
         endWithNewline()
@@ -37,26 +34,26 @@ repositories {
 }
 
 dependencies {
-	setOf("web", "security", "jdbc", "websocket", "data-jpa", "amqp", "cache").forEach {
+	setOf("web", "security", "jdbc", "websocket", "data-jpa", "amqp", "cache", "validation").forEach {
 		implementation("org.springframework.boot:spring-boot-starter-$it")
-		implementation( "com.github.ben-manes.caffeine:caffeine")
 	}
-	//implementation("org.apache.commons:commons-lang3:3.17.0")
-	implementation("it.unimi.dsi:fastutil:$fastutilVersion")
+    implementation(libs.caffeine)
+    implementation(libs.captcha)
+	implementation(libs.fastutil)
+	implementation(libs.jjwt.api)
+    implementation(libs.thumbnailator)
+
+	runtimeOnly(libs.jjwt.impl)
+	runtimeOnly(libs.jjwt.jackson)
+    runtimeOnly(libs.postgresql)
+
+    testImplementation(libs.bundles.test.spring)
+
+    testRuntimeOnly(libs.junit.platformLauncher)
+
     //implementation("com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:$bucket4jVersion")
-	implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("com.anji-plus:captcha-spring-boot-starter:$captchaVersion")
     //implementation("io.hypersistence:hypersistence-utils-hibernate-70:$hypersistenceUtilsVersion")
-	runtimeOnly("org.postgresql:postgresql")
-
-	implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
-	runtimeOnly("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
-	runtimeOnly("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
-
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("org.springframework.amqp:spring-rabbit-test")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    //implementation("org.apache.commons:commons-lang3:3.17.0")
 }
 
 /*
@@ -76,6 +73,13 @@ tasks.named<BootRun>("bootRun") {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
 tasks.processResources {
 	exclude("**/custom.yml", "**/static-dev/**")
+}
+
+tasks.test {
+    onlyIf("runTests property present") {
+        project.hasProperty("runTests")
+    }
 }

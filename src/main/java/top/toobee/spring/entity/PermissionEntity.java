@@ -20,10 +20,10 @@ public class PermissionEntity extends Role {
         this.authority = new SimpleGrantedAuthority(name);
     }
 
-    /*权限和用户是多对多的关系，通过中间表 permission_user 关联
-     * 多对多的关系两张表都需要维护关联关系
-     * 这里的 mappedBy 关联的是 UserEntity 中的 permissions 属性
-     * */
+    /*
+     * 权限和用户是多对多的关系，通过中间表 permission_user 关联 多对多的关系两张表都需要维护关联关系 这里的 mappedBy 关联的是
+     * UserEntity 中的 permissions 属性
+     */
     @ManyToMany(mappedBy = "permissions")
     public Set<UserEntity> users;
 
