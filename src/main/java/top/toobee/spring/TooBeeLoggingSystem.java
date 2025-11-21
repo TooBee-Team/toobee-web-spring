@@ -1,6 +1,7 @@
 package top.toobee.spring;
 
 import ch.qos.logback.classic.LoggerContext;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.logging.LogFile;
 import org.springframework.boot.logging.LoggingInitializationContext;
@@ -13,7 +14,7 @@ public final class TooBeeLoggingSystem extends LogbackLoggingSystem {
 
     @Override
     protected void loadDefaults(
-            LoggingInitializationContext initializationContext, LogFile logFile) {
+            @NonNull LoggingInitializationContext initializationContext, LogFile logFile) {
         final var context = (LoggerContext) LoggerFactory.getILoggerFactory();
         new LogbackConfigurator(
                         Integer.parseInt(System.getProperty("logging.periods", "1")),

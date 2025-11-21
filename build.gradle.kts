@@ -58,7 +58,6 @@ dependencies {
 
     //implementation("com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:$bucket4jVersion")
     //implementation("io.hypersistence:hypersistence-utils-hibernate-70:$hypersistenceUtilsVersion")
-    //implementation("org.apache.commons:commons-lang3:3.17.0")
 }
 
 /*

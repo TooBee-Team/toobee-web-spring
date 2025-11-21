@@ -3,10 +3,12 @@ package top.toobee.spring.utils;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Expiry;
+import com.github.benmanes.caffeine.cache.Scheduler;
 import jakarta.annotation.PostConstruct;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,7 +22,7 @@ public class DynamicTtlCache {
     public void init() {
         this.cache =
                 Caffeine.newBuilder()
-                        .scheduler(com.github.benmanes.caffeine.cache.Scheduler.systemScheduler())
+                        .scheduler(Scheduler.systemScheduler())
                         .expireAfter(
                                 new Expiry<@NonNull String, @NonNull Object>() {
                                     @Override
@@ -62,7 +64,7 @@ public class DynamicTtlCache {
     }
 
     // 从缓存中获取key对应的值
-    public Object get(String key) {
+    public @Nullable Object get(String key) {
         return cache.getIfPresent(key);
     }
 

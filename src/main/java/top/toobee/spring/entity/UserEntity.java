@@ -1,6 +1,5 @@
 package top.toobee.spring.entity;
 
-import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import java.util.Collections;
 import java.util.Set;
@@ -8,6 +7,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.hibernate.annotations.Generated;
 import org.hibernate.generator.EventType;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,7 +40,7 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "perm_id", referencedColumnName = "id"))
     public Set<PermissionEntity> permissions;
 
-    public UserEntity(@Nonnull String name, @Nonnull String password) {
+    public UserEntity(@NonNull String name, @NonNull String password) {
         this.name = name;
         this.password = password;
     }

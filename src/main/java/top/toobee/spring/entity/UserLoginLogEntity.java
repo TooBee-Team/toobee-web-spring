@@ -5,7 +5,7 @@ import java.net.InetAddress;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import org.hibernate.annotations.JdbcType;
-import org.hibernate.dialect.PostgreSQLInetJdbcType;
+import org.hibernate.dialect.type.PostgreSQLInetJdbcType;
 
 @Entity
 @Table(schema = "public", name = "user_login_log")

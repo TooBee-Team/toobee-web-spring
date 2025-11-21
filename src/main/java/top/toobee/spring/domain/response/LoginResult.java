@@ -1,9 +1,9 @@
 package top.toobee.spring.domain.response;
 
 import java.util.Locale;
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 
 public enum LoginResult {
     OK(HttpStatus.OK),

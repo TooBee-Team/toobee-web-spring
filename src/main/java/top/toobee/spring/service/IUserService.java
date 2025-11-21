@@ -1,20 +1,18 @@
 package top.toobee.spring.service;
 
 import java.net.InetAddress;
+import org.jspecify.annotations.Nullable;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import top.toobee.spring.domain.response.ChangePasswordResult;
 import top.toobee.spring.domain.response.LoginResult;
 import top.toobee.spring.entity.UserEntity;
 
 public interface IUserService extends UserDetailsService {
-    @Nullable
-    UserEntity findUserById(int id);
+    @Nullable UserEntity findUserById(int id);
 
-    @Nullable
-    UserEntity findUserByName(String name);
+    @Nullable UserEntity findUserByName(String name);
 
     /**
      * 检查用户登录的预期行为，并返回用户信息。 先校验用户名合法性，寻找当前数据库有无该用户。如果无用户，从游戏决定是否要通过 {@link #register} 注册用户。
@@ -68,7 +66,7 @@ public interface IUserService extends UserDetailsService {
     String signAndIssueToken(String name, int mark);
 
     /** 从JWT令牌中获取用户实体 */
-    UserEntity getUserFromToken(String token);
+    @Nullable UserEntity getUserFromToken(String token);
 
     /** 尝试登录并获取JWT令牌全过程 */
     ResponseEntity<?> tryLoginAndGetToken(InetAddress ip, String username, String password);

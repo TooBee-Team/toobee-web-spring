@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.util.Objects;
 import java.util.Random;
 import java.util.regex.Pattern;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -73,41 +74,18 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public LoginResult getLoginInfo(InetAddress ip, String name, String password) {
-        return NAME_MATCHER.matcher(name).matches()
-                ? userRepository
-                        .findPasswordByName(name)
-                        .map(
-                                s ->
-                                        passwordEncoder.matches(s, password)
-                                                ? LoginResult.OK
-                                                : LoginResult.WRONG_PASSWORD)
-                        .orElseGet(
-                                () -> {
-                                    var opt = playerService.isFakeOf(name);
-                                    if (opt.isEmpty()) return LoginResult.UNKNOWN_PLAYER;
-                                    if (opt.get()) return LoginResult.FAKE_PLAYER;
-                                    return amqpService
-                                            .verifyPasswordFromGame(name, password)
-                                            .map(
-                                                    b ->
-                                                            b
-                                                                    ? LoginResult.CREATED
-                                                                    : LoginResult.WRONG_PASSWORD)
-                                            .orElse(LoginResult.UNREGISTERED);
-                                })
-                : LoginResult.ILLEGAL_USERNAME;
-        /*
-         * 换种写法 if (!NAME_MATCHER.matcher(name).matches()) return
-         * LoginResult.ILLEGAL_USERNAME; final var opt1 =
-         * userRepository.findPasswordByName(name); if (opt1.isPresent()) return
-         * passwordEncoder.matches(password, opt1.get()) ? LoginResult.OK :
-         * LoginResult.WRONG_PASSWORD; final var opt2 = playerService.isFakeOf(name); if
-         * (opt2.isPresent()) return opt2.get() ? LoginResult.FAKE_PLAYER :
-         * LoginResult.UNREGISTERED; final var opt3 =
-         * amqpService.verifyPasswordFromGame(name, password); if (opt3.isPresent())
-         * return opt3.get() ? LoginResult.CREATED : LoginResult.WRONG_PASSWORD; return
-         * LoginResult.UNKNOWN_PLAYER;
-         */
+        if (!NAME_MATCHER.matcher(name).matches()) return LoginResult.ILLEGAL_USERNAME;
+        final var opt1 = userRepository.findPasswordByName(name);
+        if (opt1.isPresent())
+            return passwordEncoder.matches(password, opt1.get())
+                    ? LoginResult.OK
+                    : LoginResult.WRONG_PASSWORD;
+        final var opt2 = playerService.isFakeOf(name);
+        if (opt2.isPresent())
+            return opt2.get() ? LoginResult.FAKE_PLAYER : LoginResult.UNREGISTERED;
+        final var opt3 = amqpService.verifyPasswordFromGame(name, password);
+        return opt3.map(b -> b ? LoginResult.CREATED : LoginResult.WRONG_PASSWORD)
+                .orElse(LoginResult.UNKNOWN_PLAYER);
     }
 
     @Override
@@ -127,7 +105,7 @@ public class UserServiceImpl implements IUserService {
         if (!passwordEncoder.matches(oldOriginalPassword, user.password))
             return ChangePasswordResult.WRONG_OLD_PASSWORD;
 
-        user.password = passwordEncoder.encode(newOriginalPassword);
+        user.password = Objects.requireNonNull(passwordEncoder.encode(newOriginalPassword));
         userRepository.save(user);
         return ChangePasswordResult.SUCCESS;
     }
@@ -138,7 +116,9 @@ public class UserServiceImpl implements IUserService {
             throws IllegalArgumentException, DuplicateKeyException {
         if (!NAME_MATCHER.matcher(name).matches())
             throw new IllegalArgumentException("Illegal username");
-        final var user = new UserEntity(name, passwordEncoder.encode(originalPassword));
+        final var user =
+                new UserEntity(
+                        name, Objects.requireNonNull(passwordEncoder.encode(originalPassword)));
         final var player = Objects.requireNonNull(playerService.getPlayerByName(name));
         player.user = user;
         userRepository.saveAndFlush(user);
@@ -184,7 +164,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public @NonNull UserDetails loadUserByUsername(@NonNull String username)
+            throws UsernameNotFoundException {
         return userRepository
                 .findByName(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"))
