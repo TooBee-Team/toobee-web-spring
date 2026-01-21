@@ -5,6 +5,7 @@ plugins {
 	java
     alias(libs.plugins.updateCatalog)
 	alias(libs.plugins.spring.boot)
+    alias(libs.plugins.hibernate)
     alias(libs.plugins.spring.dependencyManagement)
     alias(libs.plugins.graalvmBuildTools)
     alias(libs.plugins.spotless)
@@ -36,8 +37,9 @@ repositories {
 }
 
 dependencies {
-	setOf("web", "security", "jdbc", "websocket", "data-jpa", "amqp", "cache", "validation").forEach {
+	listOf("webmvc", "security", "jdbc", "websocket", "data-jpa", "amqp", "cache", "validation").forEach {
 		implementation("org.springframework.boot:spring-boot-starter-$it")
+        testImplementation("org.springframework.boot:spring-boot-starter-$it-test")
 	}
     implementation(libs.caffeine)
     implementation(libs.captcha)
@@ -48,8 +50,6 @@ dependencies {
 	runtimeOnly(libs.jjwt.impl)
 	runtimeOnly(libs.jjwt.jackson)
     runtimeOnly(libs.postgresql)
-
-    testImplementation(libs.bundles.test.spring)
 
     testRuntimeOnly(libs.junit.platformLauncher)
 

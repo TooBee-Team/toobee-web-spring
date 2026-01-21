@@ -2,7 +2,7 @@ package top.toobee.spring.entity.game_project;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcType;
-import org.hibernate.dialect.PostgreSQLEnumJdbcType;
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 import top.toobee.spring.domain.enums.UserRole;
 import top.toobee.spring.domain.model.Group;
 import top.toobee.spring.entity.PlayerEntity;

@@ -15,7 +15,7 @@ public final class Main {
         System.setProperty(LoggingSystem.class.getName(), TooBeeLoggingSystem.class.getName());
     }
 
-    public static void main(String[] args) {
+    static void main(String[] args) {
         final var ctx = SpringApplication.run(Main.class, args);
         final var sc = new Scanner(System.in, StandardCharsets.UTF_8);
         if (sc.nextLine().equals("stop")) {
