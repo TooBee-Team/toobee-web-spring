@@ -9,7 +9,6 @@ import org.springframework.test.annotation.Rollback;
 import top.toobee.spring.RandomString;
 import top.toobee.spring.entity.ProfileEntity;
 import top.toobee.spring.entity.UserEntity;
-import top.toobee.spring.entity.UserPermEntity;
 
 @SpringBootTest
 public class UserTests {

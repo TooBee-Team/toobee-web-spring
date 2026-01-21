@@ -2,14 +2,37 @@ CREATE SCHEMA game_project;
 
 -- 项目贡献等级：所有者（核心发起人）、主要贡献者、参与贡献者
 CREATE TYPE game_project.user_role AS ENUM ('OWNER', 'CONTRIBUTOR', 'PARTICIPANT');
--- 维度：主世界、下界、末地
-CREATE TYPE public.world AS ENUM ('OVERWORLD', 'THE_NETHER', 'THE_END');
+-- 维度：主世界、下界、末地、大厅
+CREATE TYPE public.world AS ENUM ('OVERWORLD', 'THE_NETHER', 'THE_END', 'LOBBY');
+-- 问卷状态：待审核、通过、拒绝、完成、被覆盖
+CREATE TYPE questionnaire.status AS ENUM ('PENDING', 'PASSED', 'REJECTED', 'COMPLETED', 'OVERRIDDEN');
+
+CREATE TABLE permission.node (
+    id          serial PRIMARY KEY,
+    name        varchar(64) NOT NULL UNIQUE,
+    description text
+); COMMENT ON TABLE permission.node IS '面向资源的权限节点';
+
+CREATE TABLE permission.role (
+    id          serial PRIMARY KEY,
+    name        varchar(64) NOT NULL UNIQUE,
+    parent_id   integer REFERENCES permission.role,
+    description text
+); COMMENT ON TABLE permission.role IS '用户角色';
+
+CREATE TABLE permission.role_node ( -- non-updatable
+    role_id         integer NOT NULL REFERENCES permission.role,
+    node_id         integer NOT NULL REFERENCES permission.node,
+    created_time    timestamp NOT NULL DEFAULT now(),
+    UNIQUE (role_id, node_id)
+); COMMENT ON TABLE permission.role_node IS '角色拥有的权限节点';
 
 CREATE TABLE public.users (
     id              serial PRIMARY KEY,
     uuid            uuid NOT NULL UNIQUE DEFAULT gen_random_uuid(), -- non-updatable
     name            varchar(20) NOT NULL UNIQUE,
-    password        varchar(512) NOT NULL
+    password        varchar(512) NOT NULL,
+    role_id         integer NOT NULL REFERENCES permission.role
 ); COMMENT ON TABLE public.users IS '网站用户核心信息';
 
 CREATE TABLE public.user_profile (
@@ -36,19 +59,6 @@ CREATE TABLE public.user_login_log (
 ); COMMENT ON TABLE public.user_login_log IS '用户登录日志';
 CREATE INDEX user_login_log_user_id_index ON public.user_login_log (user_id);
 CREATE INDEX user_login_log_created_time_index ON public.user_login_log (created_time);
-
-CREATE TABLE public.permission (
-    id          serial PRIMARY KEY,
-    name        varchar(64) NOT NULL UNIQUE,
-    description text
-); COMMENT ON TABLE public.permission IS '网站权限';
-
-CREATE TABLE public.user_perm (
-    user_id         integer NOT NULL REFERENCES public.users,
-    perm_id         integer NOT NULL REFERENCES public.permission,
-    created_time    timestamp NOT NULL DEFAULT now(),
-    UNIQUE (user_id, perm_id)
-); COMMENT ON TABLE public.user_perm IS '用户拥有的权限';
 
 CREATE TABLE public.player_role (
     id          serial PRIMARY KEY,
@@ -116,3 +126,30 @@ CREATE TABLE game_project.like (
     created_time    timestamp NOT NULL DEFAULT now(),
     UNIQUE (user_id, project_id)
 ); COMMENT ON TABLE game_project.like IS '项目点赞记录';
+
+CREATE TABLE questionnaire.def (
+    id          serial PRIMARY KEY,
+    name        varchar(40) NOT NULL,
+    version     integer NOT NULL DEFAULT 1,
+    is_current  boolean NOT NULL DEFAULT false,
+    structure   jsonb NOT NULL,
+    created_at  timestamp DEFAULT NOW()
+); COMMENT ON TABLE questionnaire.def IS '问卷定义';
+
+CREATE TABLE questionnaire.instance (
+    id          serial PRIMARY KEY,
+    def_id      integer NOT NULL REFERENCES questionnaire.def,
+    player_name varchar(16) NOT NULL,
+    ip          inet NOT NULL DEFAULT '0.0.0.0',
+    status      questionnaire.status NOT NULL DEFAULT 'PENDING',
+    data        jsonb NOT NULL,
+    created_at  timestamp DEFAULT NOW()
+); COMMENT ON TABLE questionnaire.instance IS '问卷实例';
+
+CREATE TABLE questionnaire.review (
+    id          serial PRIMARY KEY,
+    instance_id integer NOT NULL REFERENCES questionnaire.instance,
+    reviewer_id integer NOT NULL REFERENCES public.users,
+    comment     text,
+    created_at  timestamp DEFAULT NOW()
+); COMMENT ON TABLE questionnaire.review IS '问卷审核';

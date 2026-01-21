@@ -29,38 +29,14 @@ public class UserEntity {
     @Column(nullable = false)
     public String password;
 
-    @ManyToMany(
-            fetch = FetchType.EAGER,
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "user_perm", // 指定连接表的名称为 "user_perm
-            // 定义当前实体（UserEntity）在连接表中的外键列，名为 "user_id"，引用 "id" 列
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            // 定义关联实体（PermissionEntity）在连接表中的外键列，名为 "perm_id"，引用 "id" 列
-            inverseJoinColumns = @JoinColumn(name = "perm_id", referencedColumnName = "id"))
-    public Set<PermissionEntity> permissions;
+    @Column(name = "role_id", nullable = false)
+    public Integer roleId;
 
     public UserEntity(@NonNull String name, @NonNull String password) {
         this.name = name;
         this.password = password;
+        this.roleId = 1;
     }
 
-    // 开启级联操作，Hibernate 需要一个无参构造函数
-    // 否则会报错：org.hibernate.TransientObjectException: object references an unsaved
-    // transient instance
-    // -
-    // save the transient instance before flushing
     public UserEntity() {}
-
-    public Set<GrantedAuthority> getAuthorities() {
-        return permissions == null
-                ? Collections.emptySet()
-                : permissions.stream()
-                        .map(PermissionEntity::getAuthority)
-                        .collect(Collectors.toUnmodifiableSet());
-    }
-
-    public UserDetails toUserDetails() {
-        return new User(name, password, getAuthorities());
-    }
 }

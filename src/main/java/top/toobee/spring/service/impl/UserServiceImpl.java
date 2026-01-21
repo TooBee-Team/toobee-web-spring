@@ -10,6 +10,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +28,7 @@ import top.toobee.spring.service.IUserService;
 import top.toobee.spring.service.PlayerService;
 import top.toobee.spring.utils.DynamicTtlCache;
 import top.toobee.spring.utils.JwtUtil;
+import top.toobee.spring.utils.RolePermissionData;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -41,6 +43,7 @@ public class UserServiceImpl implements IUserService {
     private final PlayerService playerService;
     private final AmqpService amqpService;
     private final DynamicTtlCache dynamicTtlCache;
+    private final RolePermissionData rolePermissionData;
 
     @Autowired
     public UserServiceImpl(
@@ -51,7 +54,8 @@ public class UserServiceImpl implements IUserService {
             PasswordEncoder passwordEncoder,
             PlayerService playerService,
             AmqpService amqpService,
-            DynamicTtlCache dynamicTtlCache) {
+            DynamicTtlCache dynamicTtlCache,
+            RolePermissionData rolePermissionData) {
         this.profileRepository = profileRepository;
         this.userLoginLogRepository = userLoginLogRepository;
         this.userRepository = userRepository;
@@ -60,6 +64,7 @@ public class UserServiceImpl implements IUserService {
         this.playerService = playerService;
         this.amqpService = amqpService;
         this.dynamicTtlCache = dynamicTtlCache;
+        this.rolePermissionData = rolePermissionData;
     }
 
     @Override
@@ -143,7 +148,6 @@ public class UserServiceImpl implements IUserService {
     public @Nullable UserEntity getUserFromToken(String token) {
         final var isValid = dynamicTtlCache.get(token);
         if (isValid == null) return null;
-
         return userRepository.findByName(jwtUtil.extractSubject(token)).orElse(null);
     }
 
@@ -166,9 +170,9 @@ public class UserServiceImpl implements IUserService {
     @Override
     public @NonNull UserDetails loadUserByUsername(@NonNull String username)
             throws UsernameNotFoundException {
-        return userRepository
+        final var user = userRepository
                 .findByName(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"))
-                .toUserDetails();
+                .orElseThrow(() -> UsernameNotFoundException.fromUsername(username));
+        return new User(username, user.password, rolePermissionData.getPerms(user.roleId));
     }
 }
