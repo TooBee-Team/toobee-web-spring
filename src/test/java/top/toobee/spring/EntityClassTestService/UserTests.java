@@ -30,12 +30,4 @@ public class UserTests {
         entityManager.persist(profile);
         entityManager.persist(user);
     }
-
-    @Test
-    @Transactional
-    @Rollback(false)
-    public void createUserPerm() {
-        UserPermEntity userPermEntity = new UserPermEntity();
-        userPermEntity.user.id = entityManager.find(UserEntity.class, "test3").id;
-    }
 }

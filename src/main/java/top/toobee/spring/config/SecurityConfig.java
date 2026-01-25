@@ -11,8 +11,8 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import top.toobee.spring.filter.JwtAuthFilter;
 import top.toobee.spring.service.IUserService;
-import top.toobee.spring.utils.JwtAuthFilter;
 
 @Configuration
 @Import(com.anji.captcha.config.AjCaptchaAutoConfiguration.class)
@@ -28,13 +28,13 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http) {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         req ->
-                                req.requestMatchers("/api/private/**")
+                                req.requestMatchers("/private/**")
                                         .authenticated()
                                         .anyRequest()
                                         .permitAll())

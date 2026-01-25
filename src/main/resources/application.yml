@@ -42,6 +42,9 @@ spring:
   application:
     name:
       toobee-web-spring
+  threads:
+    virtual:
+      enabled: true
   datasource:
     hikari:
       initialization-fail-timeout: 5000

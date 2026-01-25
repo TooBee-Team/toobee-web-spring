@@ -6,6 +6,8 @@ CREATE TYPE game_project.user_role AS ENUM ('OWNER', 'CONTRIBUTOR', 'PARTICIPANT
 CREATE TYPE public.world AS ENUM ('OVERWORLD', 'THE_NETHER', 'THE_END', 'LOBBY');
 -- 问卷状态：待审核、通过、拒绝、完成、被覆盖
 CREATE TYPE questionnaire.status AS ENUM ('PENDING', 'PASSED', 'REJECTED', 'COMPLETED', 'OVERRIDDEN');
+-- 登录状态：成功、密码错误、账号被锁定、IP被封禁、已注销
+CREATE TYPE public.login_status AS ENUM ('SUCCESS', 'PASSWORD_WRONG', 'ACCOUNT_LOCKED', 'IP_BANNED', 'LOGGED_OUT');
 
 CREATE TABLE permission.node (
     id          serial PRIMARY KEY,
@@ -33,6 +35,7 @@ CREATE TABLE public.users (
     name            varchar(20) NOT NULL UNIQUE,
     password        varchar(512) NOT NULL,
     role_id         integer NOT NULL REFERENCES permission.role
+    locked          boolean NOT NULL DEFAULT false,
 ); COMMENT ON TABLE public.users IS '网站用户核心信息';
 
 CREATE TABLE public.user_profile (
@@ -55,7 +58,8 @@ CREATE TABLE public.user_login_log (
     id          bigserial PRIMARY KEY,
     user_id     integer NOT NULL REFERENCES public.users,
     ip          inet NOT NULL DEFAULT '0.0.0.0',
-    log_time    timestamp NOT NULL DEFAULT now()
+    log_time    timestamp NOT NULL DEFAULT now(),
+    status      public.login_status NOT NULL
 ); COMMENT ON TABLE public.user_login_log IS '用户登录日志';
 CREATE INDEX user_login_log_user_id_index ON public.user_login_log (user_id);
 CREATE INDEX user_login_log_created_time_index ON public.user_login_log (created_time);

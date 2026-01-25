@@ -4,6 +4,7 @@ import java.util.Locale;
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import top.toobee.spring.result.dto.CustomErrorDto;
 
 public enum LoginResult {
     OK(HttpStatus.OK),

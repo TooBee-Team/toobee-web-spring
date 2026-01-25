@@ -3,6 +3,7 @@ package top.toobee.spring.domain.response;
 import java.util.Locale;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import top.toobee.spring.result.dto.CustomErrorDto;
 
 public enum ChangePasswordResult {
     SUCCESS(HttpStatus.OK),

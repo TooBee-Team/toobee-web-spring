@@ -1,4 +1,4 @@
-package top.toobee.spring.domain.response;
+package top.toobee.spring.result.dto;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;

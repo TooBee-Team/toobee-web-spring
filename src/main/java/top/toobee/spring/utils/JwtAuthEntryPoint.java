@@ -9,8 +9,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JwtAuthEntryPoint implements AuthenticationEntryPoint {
-
+public final class JwtAuthEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(
             @Nullable HttpServletRequest request,

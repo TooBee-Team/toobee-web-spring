@@ -57,7 +57,6 @@ dependencies {
     errorprone(libs.errorprone.refaster)
 
     //implementation("com.giffing.bucket4j.spring.boot.starter:bucket4j-spring-boot-starter:$bucket4jVersion")
-    //implementation("io.hypersistence:hypersistence-utils-hibernate-70:$hypersistenceUtilsVersion")
 }
 
 /*
@@ -68,15 +67,22 @@ graalvmNative {
 }
  */
 
-
 tasks.named<BootRun>("bootRun") {
 	//workingDir = file("run").apply(File::mkdirs)
 	standardInput = System.`in`
     systemProperty("spring.profiles.active", "dev")
 }
 
+tasks.bootJar {
+    filesMatching("META-INF/native-image/**") {
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
+}
+
 tasks.withType<JavaCompile> {
     options.errorprone {
+        excludedPaths = ".*/build/generated/.*"
+
         enable("EqualsBrokenForNull")
         enable("NegativeBoolean")
         enable("InitializeInline")
@@ -85,6 +91,8 @@ tasks.withType<JavaCompile> {
         enable("FieldCanBeFinal")
         enable("FieldCanBeLocal")
         enable("FieldCanBeStatic")
+
+        disable("ImmutableEnumChecker", "UnusedVariable", "UnusedMethod")
 
         errorproneArgs.addAll(
             "-XepPatchLocation:$projectDir/patches"

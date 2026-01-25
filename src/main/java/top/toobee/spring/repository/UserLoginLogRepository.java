@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 import top.toobee.spring.entity.UserLoginLogEntity;
 
 @Repository
-public interface UserLoginLogRepository extends JpaRepository<@NonNull UserLoginLogEntity, @NonNull Long> {}
+public interface UserLoginLogRepository
+        extends JpaRepository<@NonNull UserLoginLogEntity, @NonNull Long> {}

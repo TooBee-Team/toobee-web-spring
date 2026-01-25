@@ -1,11 +1,10 @@
 package top.toobee.spring.entity.questionnaire;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import tools.jackson.databind.JsonNode;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(schema = "questionnaire", name = "def")

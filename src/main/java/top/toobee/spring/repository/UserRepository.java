@@ -1,7 +1,6 @@
 package top.toobee.spring.repository;
 
 import java.util.Optional;
-
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -12,4 +11,6 @@ public interface UserRepository extends JpaRepository<@NonNull UserEntity, @NonN
     Optional<UserEntity> findByName(String name);
 
     Optional<String> findPasswordByName(String name);
+
+    Optional<Integer> findRoleIdByName(String name);
 }

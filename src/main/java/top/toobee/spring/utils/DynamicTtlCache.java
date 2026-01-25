@@ -4,73 +4,49 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Expiry;
 import com.github.benmanes.caffeine.cache.Scheduler;
-import jakarta.annotation.PostConstruct;
+import java.time.Duration;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DynamicTtlCache {
-    // 存粗每个key的过期时间
-    private final ConcurrentHashMap<String, Long> ttlMap = new ConcurrentHashMap<>();
+public final class DynamicTtlCache {
+    private final ConcurrentHashMap<String, Set<String>> nameTokensMap = new ConcurrentHashMap<>();
+    private final Cache<@NonNull String, @NonNull Duration> cache =
+            Caffeine.newBuilder()
+                    .maximumSize(20000)
+                    .scheduler(Scheduler.systemScheduler())
+                    .expireAfter(Expiry.<@NonNull String, @NonNull Duration>creating((_, v) -> v))
+                    .build();
 
-    private Cache<@NonNull String, Object> cache;
-
-    @PostConstruct
-    public void init() {
-        this.cache =
-                Caffeine.newBuilder()
-                        .scheduler(Scheduler.systemScheduler())
-                        .expireAfter(
-                                new Expiry<@NonNull String, @NonNull Object>() {
-                                    @Override
-                                    public long expireAfterCreate(
-                                            String key, Object value, long currentTime) {
-                                        // 返回该key的过期时间(纳秒)
-                                        Long ttlNanos = ttlMap.get(key);
-                                        return ttlNanos != null
-                                                ? ttlNanos
-                                                : TimeUnit.MINUTES.toNanos(10); // 默认10分钟
-                                    }
-
-                                    @Override
-                                    public long expireAfterUpdate(
-                                            String key,
-                                            Object value,
-                                            long currentTime,
-                                            long currentDuration) {
-                                        return currentDuration; // 更新时不改变过期时间
-                                    }
-
-                                    @Override
-                                    public long expireAfterRead(
-                                            String key,
-                                            Object value,
-                                            long currentTime,
-                                            long currentDuration) {
-                                        return currentDuration; // 读取时不改变
-                                    }
-                                })
-                        .build();
+    public boolean hasToken(String jwt) {
+        return cache.getIfPresent(jwt) != null;
     }
 
-    // 放入缓存，并指定该key的过期时间(秒)
-    public void put(String key, Object value, long expireSeconds) {
-        long nanos = TimeUnit.SECONDS.toNanos(expireSeconds);
-        ttlMap.put(key, nanos);
-        cache.put(key, value);
+    public void addToken(String name, String jwt, Duration duration) {
+        nameTokensMap.compute(
+                name,
+                (_, set) -> {
+                    if (set == null) set = ConcurrentHashMap.newKeySet();
+                    set.add(jwt);
+                    return set;
+                });
+        cache.put(jwt, duration);
     }
 
-    // 从缓存中获取key对应的值
-    public @Nullable Object get(String key) {
-        return cache.getIfPresent(key);
+    public void removeToken(String name, String jwt) {
+        nameTokensMap.computeIfPresent(
+                name,
+                (_, set) -> {
+                    set.remove(jwt);
+                    return set.isEmpty() ? null : set;
+                });
+        cache.invalidate(jwt);
     }
 
-    // 删除缓存中的key
-    public void remove(String key) {
-        cache.invalidate(key);
-        ttlMap.remove(key);
+    public void removeAll(String name) {
+        final var set = nameTokensMap.remove(name);
+        if (set != null) cache.invalidateAll(set);
     }
 }

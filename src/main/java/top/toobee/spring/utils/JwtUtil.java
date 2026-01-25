@@ -1,7 +1,6 @@
 package top.toobee.spring.utils;
 
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureAlgorithm;
 import java.security.PrivateKey;
 import java.time.Instant;
@@ -10,21 +9,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JwtUtil {
+public final class JwtUtil {
     public static final SignatureAlgorithm ALGORITHM = Jwts.SIG.EdDSA;
 
     private final PrivateKey privateKey;
     private final JwtParser parser;
-    private final long expirationMs;
+    private final long defaultExpirationMs;
 
     public JwtUtil(@Value("${jwt.expiration}") Long expirationMs) {
-        this.expirationMs = expirationMs;
+        this.defaultExpirationMs = expirationMs;
         final var pair = ALGORITHM.keyPair().build();
         this.privateKey = pair.getPrivate();
         this.parser = Jwts.parser().verifyWith(pair.getPublic()).build();
     }
 
-    public String generateToken(String username, int mark) {
+    public String generateToken(String username, int mark, long expirationMs) {
         final var now = Instant.now();
         return Jwts.builder()
                 .header()
@@ -38,23 +37,16 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String extractSubject(String token) {
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);
-            token = token.trim();
-        }
-        return parser.parseSignedClaims(token).getPayload().getSubject();
+    public String generateToken(String username, int mark) {
+        return generateToken(username, mark, defaultExpirationMs);
     }
 
-    // 获取token过期时间(秒)
-    public long getExpirationDate(String token) {
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7).trim();
-        }
-        return parser.parseSignedClaims(token)
-                .getPayload()
-                .getExpiration()
-                .toInstant()
-                .getEpochSecond();
+    public Claims extractClaims(String token) throws JwtException, IllegalArgumentException {
+        if (token != null && token.startsWith("Bearer ")) token = token.substring(7).trim();
+        return parser.parseSignedClaims(token).getPayload();
+    }
+
+    public String extractSubject(String token) throws JwtException, IllegalArgumentException {
+        return extractClaims(token).getSubject();
     }
 }
