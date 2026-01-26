@@ -31,17 +31,17 @@ public class ItemEntity {
     public UserEntity creator;
 
     @CreationTimestamp
-    @Column(name = "webpage_created_time", nullable = false, updatable = false)
-    public LocalDateTime webpageCreatedTime;
+    @Column(name = "webpage_ctime", nullable = false, updatable = false)
+    public LocalDateTime webpageCtime;
 
-    @Column(name = "webpage_updated_time", nullable = false)
-    public LocalDateTime webpageUpdatedTime;
+    @Column(name = "webpage_utime", nullable = false)
+    public LocalDateTime webpageUtime;
 
-    @Column(name = "project_created_time")
-    public Date projectCreatedTime;
+    @Column(name = "project_ctime")
+    public Date projectCtime;
 
-    @Column(name = "project_updated_time")
-    public Date projectUpdatedTime;
+    @Column(name = "project_utime")
+    public Date projectUtime;
 
     @Column public String introduction;
 

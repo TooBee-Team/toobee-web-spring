@@ -1,4 +1,4 @@
-package top.toobee.spring.controller.dto;
+package top.toobee.spring.domain.enums;
 
 public enum ContactType {
     QQ,

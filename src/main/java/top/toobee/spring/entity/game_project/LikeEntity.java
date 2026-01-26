@@ -20,7 +20,7 @@ public class LikeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     public ItemEntity project;
 
-    @Column(name = "created_time", nullable = false)
+    @Column(nullable = false)
     @CreationTimestamp
-    public LocalDateTime createdTime;
+    public LocalDateTime ctime;
 }

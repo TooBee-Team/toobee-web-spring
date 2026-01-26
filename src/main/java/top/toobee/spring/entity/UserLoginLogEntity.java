@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import top.toobee.spring.domain.enums.LoginStatus;
 
 @Entity
-@Table(schema = "public", name = "user_login_log")
+@Table(schema = "account", name = "user_login_log")
 public class UserLoginLogEntity {
     private static final Logger logger = LoggerFactory.getLogger(UserLoginLogEntity.class);
 
@@ -28,8 +28,8 @@ public class UserLoginLogEntity {
     @Column(nullable = false, columnDefinition = "inet")
     private String ip;
 
-    @Column(nullable = false, name = "login_time")
-    public LocalDateTime loginTime;
+    @Column(nullable = false)
+    public LocalDateTime ctime;
 
     @Enumerated(EnumType.STRING)
     @JdbcType(PostgreSQLEnumJdbcType.class)
@@ -42,7 +42,7 @@ public class UserLoginLogEntity {
         this.user = user;
         this.ip = ip.getHostAddress();
         this.loginStatus = loginStatus;
-        this.loginTime = LocalDateTime.now(ZoneId.systemDefault());
+        this.ctime = LocalDateTime.now(ZoneId.systemDefault());
     }
 
     public InetAddress getIp() {

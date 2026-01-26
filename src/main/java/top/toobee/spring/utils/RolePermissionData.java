@@ -53,7 +53,7 @@ public final class RolePermissionData implements ApplicationRunner {
     public void refresh() throws DataAccessException {
         final Int2ReferenceMap<GrantedAuthority> perms = new Int2ReferenceOpenHashMap<>();
         jdbc.query(
-                "SELECT id, name FROM permission.node",
+                "SELECT id, name FROM account.perm_node",
                 rs -> {
                     perms.put(rs.getInt(1), new SimpleGrantedAuthority(rs.getString(1)));
                     return null;
@@ -61,7 +61,7 @@ public final class RolePermissionData implements ApplicationRunner {
         final Int2ObjectMap<@NonNull String> roleName = new Int2ObjectOpenHashMap<>();
         final Int2IntMap roleParent = new Int2IntOpenHashMap();
         jdbc.query(
-                "SELECT id, name, parent_id FROM permission.role",
+                "SELECT id, name, parent_id FROM account.perm_role",
                 rs -> {
                     int id = rs.getInt(1);
                     roleName.put(id, rs.getString(2));
@@ -72,7 +72,7 @@ public final class RolePermissionData implements ApplicationRunner {
         final Int2ReferenceMap<ReferenceSet<GrantedAuthority>> oldMap =
                 new Int2ReferenceOpenHashMap<>();
         jdbc.query(
-                "SELECT role_id, node_id FROM permission.role_node",
+                "SELECT role_id, node_id FROM account.perm_role_node",
                 rs -> {
                     oldMap.computeIfAbsent(rs.getInt(1), _ -> new ReferenceOpenHashSet<>())
                             .add(perms.get(rs.getInt(2)));

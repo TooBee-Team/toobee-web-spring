@@ -26,6 +26,6 @@ public class QDefEntity {
     @Column(columnDefinition = "jsonb", nullable = false)
     public JsonNode structure;
 
-    @Column(name = "created_at", nullable = false)
-    public LocalDateTime createdAt;
+    @Column(nullable = false)
+    public LocalDateTime ctime;
 }

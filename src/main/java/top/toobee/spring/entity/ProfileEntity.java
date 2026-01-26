@@ -17,8 +17,12 @@ public class ProfileEntity {
     public UserEntity user;
 
     @CreationTimestamp
-    @Column(name = "created_time", nullable = false, updatable = false)
-    public LocalDateTime createdTime;
+    @Column(nullable = false, updatable = false)
+    public LocalDateTime ctime;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "main_player", unique = true)
+    public PlayerEntity mainPlayer;
 
     @Column public String email;
 

@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import top.toobee.spring.RandomString;
 import top.toobee.spring.entity.PlayerEntity;
-import top.toobee.spring.entity.PlayerRoleEntity;
 
 @SpringBootTest
 public class PlayerTests {
@@ -22,17 +21,6 @@ public class PlayerTests {
         PlayerEntity player = new PlayerEntity();
         player.name = RandomString.generateRandomString(6);
         player.uuid = UUID.randomUUID();
-        player.white = true;
         entityManager.persist(player);
-    }
-
-    @Test
-    @Transactional
-    @Rollback(false)
-    public void createPlayerRole() {
-        PlayerRoleEntity entity = new PlayerRoleEntity();
-        entity.setName(RandomString.generateRandomString(6));
-        entity.description = RandomString.generateRandomString(20);
-        entityManager.persist(entity);
     }
 }

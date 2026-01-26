@@ -1,5 +1,7 @@
 package top.toobee.spring.controller.dto;
 
+import top.toobee.spring.domain.enums.ContactType;
+
 public record RegisterByGame(
         String username,
         String password,

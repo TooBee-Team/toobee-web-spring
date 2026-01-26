@@ -17,14 +17,7 @@ public class PlayerEntity {
     public String name;
 
     @Column(nullable = false)
-    public Boolean white = false;
-
-    @Column(nullable = false)
     public Boolean fake = false;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id")
-    public PlayerRoleEntity playerRole;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
