@@ -18,7 +18,7 @@ public class LikeTests {
     @Transactional
     @Rollback(false)
     public void createLike() {
-        LikeEntity like = new LikeEntity();
+        final var like = new LikeEntity();
         like.project = entityManager.find(ItemEntity.class, 1);
         like.user = entityManager.find(UserEntity.class, 4);
         entityManager.persist(like);

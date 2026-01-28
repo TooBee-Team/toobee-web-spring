@@ -32,7 +32,7 @@ public class UserController {
         this.dynamicTtlCache = dynamicTtlCache;
     }
 
-    public record LoginRequest(String username, String password, String captchaVerification) {}
+    public record LoginRequest(String username, String password, String captcha) {}
 
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
@@ -41,7 +41,7 @@ public class UserController {
         final var banTime = banIpService.banTime(ip, request.username());
         if (banTime > 0) return new LoginResult.IpBanned(banTime).to();
         final var captchaVO = new CaptchaVO();
-        captchaVO.setCaptchaVerification(request.captchaVerification);
+        captchaVO.setCaptchaVerification(request.captcha());
         final var response = captchaService.verification(captchaVO);
         return response.isSuccess()
                 ? userService.loginAndGetToken(ip, request.username(), request.password()).to()

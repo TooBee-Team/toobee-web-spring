@@ -17,11 +17,8 @@ public class OntToOneTests {
     // @Transactional
     public void testC() {
         String name = RandomString.generateRandomString(6);
-        UserEntity user = new UserEntity(name, "123456");
-        // 记录日志信息
-
-        ProfileEntity profile = new ProfileEntity();
-        profile.user = user;
+        final var user = new UserEntity(name, "123456");
+        final var profile = new ProfileEntity(user);
         profileRepository.save(profile);
         userRepository.save(user);
     }

@@ -18,7 +18,7 @@ public class PlayerTests {
     @Transactional
     @Rollback(false)
     public void createPlayer() {
-        PlayerEntity player = new PlayerEntity();
+        final var player = new PlayerEntity();
         player.name = RandomString.generateRandomString(6);
         player.uuid = UUID.randomUUID();
         entityManager.persist(player);

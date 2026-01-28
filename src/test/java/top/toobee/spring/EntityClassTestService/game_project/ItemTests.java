@@ -21,7 +21,7 @@ public class ItemTests {
     @Transactional
     @Rollback(false)
     public void createItem() {
-        ItemEntity item = new ItemEntity();
+        final var item = new ItemEntity();
         item.identifier = RandomString.generateRandomString(15);
         item.name = RandomString.generateRandomString(15);
         item.creator = entityManager.find(UserEntity.class, 4);

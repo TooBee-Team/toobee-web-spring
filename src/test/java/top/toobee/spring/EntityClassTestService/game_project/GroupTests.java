@@ -19,7 +19,7 @@ public class GroupTests {
     @Transactional
     @Rollback(false)
     public void createGroup() {
-        GroupEntity group =
+        final var group =
                 new GroupEntity(
                         entityManager.find(ItemEntity.class, 1),
                         entityManager.find(PlayerEntity.class, 4));

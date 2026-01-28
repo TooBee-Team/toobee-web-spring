@@ -8,7 +8,10 @@ import org.springframework.boot.logging.LoggingSystem;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {
+        "top.toobee.spring",
+        "com.anji.captcha.util"
+})
 @RestController
 public final class Main {
     static {

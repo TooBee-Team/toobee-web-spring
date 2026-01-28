@@ -18,9 +18,8 @@ public class UserTests {
     @Transactional
     @Rollback(false)
     public void createUser() {
-        UserEntity user = new UserEntity(RandomString.generateRandomString(6), "123456");
-        ProfileEntity profile = new ProfileEntity();
-        profile.user = user;
+        final var user = new UserEntity(RandomString.generateRandomString(6), "123456");
+        final var profile = new ProfileEntity(user);
         profile.email =
                 RandomString.generateRandomString(6)
                         + "@"

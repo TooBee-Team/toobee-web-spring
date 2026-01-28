@@ -36,18 +36,13 @@ public class CaptchaController {
     }
 
     @PostMapping("/verify")
-    public ResponseModel verify(@RequestBody CaptchaVO data, HttpServletRequest request) {
+    public ResponseModel verify(@RequestBody CaptchaVO data) {
         return captchaService.verification(data);
     }
 
     public static String getRemoteId(HttpServletRequest request) {
-        String xfwd = request.getHeader("X-Forwarded-For");
-        String ip = getRemoteIpFromXfwd(xfwd);
-        String ua = request.getHeader("user-agent");
-        if (StringUtils.isNotBlank(ip)) {
-            return ip + ua;
-        }
-        return request.getRemoteHost() + ua;
+        final String ip = getRemoteIpFromXfwd(request.getHeader("X-Forwarded-For"));
+        return (StringUtils.isNotBlank(ip) ? ip : request.getRemoteHost()) + request.getHeader("user-agent");
     }
 
     private static @Nullable String getRemoteIpFromXfwd(String xfwd) {

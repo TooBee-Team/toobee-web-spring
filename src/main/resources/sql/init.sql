@@ -1,3 +1,5 @@
+CREATE SCHEMA account;
+CREATE SCHEMA questionnaire;
 CREATE SCHEMA game_project;
 
 -- 项目贡献等级：所有者（核心发起人）、主要贡献者、参与贡献者
@@ -37,7 +39,7 @@ CREATE TABLE public.users (
     name            varchar(20) NOT NULL UNIQUE,
     password        varchar(512) NOT NULL,
     role_id         integer NOT NULL REFERENCES account.perm_role,
-    locked          boolean NOT NULL DEFAULT false,
+    locked          boolean NOT NULL DEFAULT false
 ); COMMENT ON TABLE public.users IS '网站用户核心信息';
 
 CREATE TABLE public.player (
@@ -116,7 +118,7 @@ CREATE TABLE game_project.item (
     project_utime    date,
     introduction     text,
     thumbnail        bytea,
-    world            game_project.world NOT NULL DEFAULT 'overworld',
+    world            game_project.world NOT NULL DEFAULT 'OVERWORLD',
     x                integer NOT NULL,
     y                integer NOT NULL,
     z                integer NOT NULL
@@ -136,7 +138,7 @@ COMMENT ON COLUMN game_project.item.world IS '项目工程所在维度，再加�
 CREATE TABLE game_project.group (
     project_id  integer NOT NULL REFERENCES game_project.item,
     player_id   integer NOT NULL REFERENCES public.player,
-    role        game_project.user_role NOT NULL DEFAULT 'owner',
+    role        game_project.user_role NOT NULL DEFAULT 'OWNER',
     UNIQUE (project_id, player_id)
 ); COMMENT ON TABLE game_project.group IS '每个项目维护组的用户信息，及其所扮演的角色';
 

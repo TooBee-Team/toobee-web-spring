@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import top.toobee.spring.domain.enums.LoginStatus;
 import top.toobee.spring.domain.model.UserDetailsImpl;
 import top.toobee.spring.domain.response.ChangePasswordResult;
@@ -32,7 +31,6 @@ import top.toobee.spring.utils.DynamicTtlCache;
 import top.toobee.spring.utils.JwtUtil;
 import top.toobee.spring.utils.RolePermissionData;
 
-@Service
 public class UserServiceOldImpl implements IUserServiceOld {
     public static final Pattern NAME_MATCHER = Pattern.compile("^[a-zA-Z0-9_-]{2,20}$");
 

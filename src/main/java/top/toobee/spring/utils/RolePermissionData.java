@@ -53,29 +53,33 @@ public final class RolePermissionData implements ApplicationRunner {
     public void refresh() throws DataAccessException {
         final Int2ReferenceMap<GrantedAuthority> perms = new Int2ReferenceOpenHashMap<>();
         jdbc.query(
-                "SELECT id, name FROM account.perm_node",
+                "SELECT id, name FROM account.perm_node;",
                 rs -> {
-                    perms.put(rs.getInt(1), new SimpleGrantedAuthority(rs.getString(1)));
+                    while (rs.next())
+                        perms.put(rs.getInt(1), new SimpleGrantedAuthority(rs.getString(2)));
                     return null;
                 });
         final Int2ObjectMap<@NonNull String> roleName = new Int2ObjectOpenHashMap<>();
         final Int2IntMap roleParent = new Int2IntOpenHashMap();
         jdbc.query(
-                "SELECT id, name, parent_id FROM account.perm_role",
+                "SELECT id, name, parent_id FROM account.perm_role;",
                 rs -> {
-                    int id = rs.getInt(1);
-                    roleName.put(id, rs.getString(2));
-                    int p = rs.getInt(3);
-                    if (!rs.wasNull()) roleParent.put(id, p);
+                    while (rs.next()) {
+                        final int id = rs.getInt(1);
+                        roleName.put(id, rs.getString(2));
+                        final int p = rs.getInt(3);
+                        if (!rs.wasNull()) roleParent.put(id, p);
+                    }
                     return null;
                 });
         final Int2ReferenceMap<ReferenceSet<GrantedAuthority>> oldMap =
                 new Int2ReferenceOpenHashMap<>();
         jdbc.query(
-                "SELECT role_id, node_id FROM account.perm_role_node",
+                "SELECT role_id, node_id FROM account.perm_role_node;",
                 rs -> {
-                    oldMap.computeIfAbsent(rs.getInt(1), _ -> new ReferenceOpenHashSet<>())
-                            .add(perms.get(rs.getInt(2)));
+                    while (rs.next())
+                        oldMap.computeIfAbsent(rs.getInt(1), _ -> new ReferenceOpenHashSet<>())
+                                .add(perms.get(rs.getInt(2)));
                     return null;
                 });
         final Int2ReferenceMap<ReferenceSet<GrantedAuthority>> newMap =

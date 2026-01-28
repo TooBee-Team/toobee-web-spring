@@ -1,4 +1,4 @@
-INSERT INTO permission.node (name, description)
+INSERT INTO account.perm_node (name, description)
 VALUES
     ('permission:control', '权限控制'),
     ('user:lock', '用户锁定'),
@@ -7,10 +7,10 @@ VALUES
     ('questionnaire:review', '问卷审核'),
     ('vote:cast', '投票'),
     ('vote:create', '发起投票'),
-    ('log:create', '日志创建');
+    ('log:create', '日志创建'),
     ('issue:report', '问题上报');
 
-INSERT INTO permission.role (name, description)
+INSERT INTO account.perm_role (name, description)
 VALUES
     ('developer', '开发者'),
     ('admin', '管理员'),
@@ -18,12 +18,20 @@ VALUES
     ('user', '普通用户'),
     ('guest', '访客');
 
-UPDATE permission.role AS r SET parent_id = (SELECT id FROM r WHERE name = 'guest') WHERE name = 'user';
-UPDATE permission.role AS r SET parent_id = (SELECT id FROM r WHERE name = 'user') WHERE name = 'member';
-UPDATE permission.role AS r SET parent_id = (SELECT id FROM r WHERE name = 'member') WHERE name = 'developer';
-UPDATE permission.role AS r SET parent_id = (SELECT id FROM r WHERE name = 'developer') WHERE name = 'admin';
+UPDATE account.perm_role 
+SET parent_id = (SELECT id FROM account.perm_role WHERE name = 'guest') 
+WHERE name = 'user';
+UPDATE account.perm_role 
+SET parent_id = (SELECT id FROM account.perm_role WHERE name = 'user') 
+WHERE name = 'member';
+UPDATE account.perm_role 
+SET parent_id = (SELECT id FROM account.perm_role WHERE name = 'member') 
+WHERE name = 'admin';
+UPDATE account.perm_role 
+SET parent_id = (SELECT id FROM account.perm_role WHERE name = 'admin') 
+WHERE name = 'developer';
 
-INSERT INTO permission.role_node(role_id, node_id)
+INSERT INTO account.perm_role_node(role_id, node_id)
 SELECT r.id, n.id
 FROM (
   VALUES
@@ -33,10 +41,10 @@ FROM (
     ('member','vote:create'),
     ('member','log:create'),
     ('user','vote:cast'),
-    ('user','issue:report')
+    ('user','issue:report'),
     ('guest','comment:normal'),
     ('guest', 'user:query')
 ) AS t(role_name, node_name)
-JOIN permission.role r ON r.name = t.role_name
-JOIN permission.node n ON n.name = t.node_name
+JOIN account.perm_role r ON r.name = t.role_name
+JOIN account.perm_node n ON n.name = t.node_name
 ON CONFLICT (role_id, node_id) DO NOTHING;

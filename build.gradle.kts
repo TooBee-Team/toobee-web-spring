@@ -67,10 +67,11 @@ graalvmNative {
 }
  */
 
-tasks.named<BootRun>("bootRun") {
+tasks.withType<BootRun>() {
 	//workingDir = file("run").apply(File::mkdirs)
 	standardInput = System.`in`
     systemProperty("spring.profiles.active", "dev")
+    outputs.upToDateWhen { false }
 }
 
 tasks.bootJar {
@@ -100,8 +101,12 @@ tasks.withType<JavaCompile> {
     }
 }
 
-tasks.withType<Test> {
-	useJUnitPlatform()
+sourceSets {
+    main {
+        java {
+            setSrcDirs(listOf("src/main/java"))
+        }
+    }
 }
 
 tasks.processResources {
@@ -109,6 +114,7 @@ tasks.processResources {
 }
 
 tasks.test {
+    useJUnitPlatform()
     onlyIf("runTests property present") {
         project.hasProperty("runTests")
     }
