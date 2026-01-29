@@ -42,7 +42,8 @@ public class CaptchaController {
 
     public static String getRemoteId(HttpServletRequest request) {
         final String ip = getRemoteIpFromXfwd(request.getHeader("X-Forwarded-For"));
-        return (StringUtils.isNotBlank(ip) ? ip : request.getRemoteHost()) + request.getHeader("user-agent");
+        return (StringUtils.isNotBlank(ip) ? ip : request.getRemoteHost())
+                + request.getHeader("user-agent");
     }
 
     private static @Nullable String getRemoteIpFromXfwd(String xfwd) {
